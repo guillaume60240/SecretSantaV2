@@ -1,12 +1,13 @@
 let inputs = refreshInputs();
 let eventDescription = document.getElementById('eventDescription');
 let numberOfMembers = 1;
+let btnAdd = document.querySelector('.addMemberBtn');
+let submitBtnCreate = document.querySelector('button[name="createMember"]');
 
 
 function refreshInputs() {
     return inputs = document.querySelectorAll('input'), startValidation();
 }
-
 
 //switch pour donner les id d'inputs et de span d'info-inputs et récupérer le validator
 function startValidation() {
@@ -159,7 +160,6 @@ function dateVerify(input, inputInfo) {
 }
 
 //Ajout de noms de membres
-let btnAdd = document.querySelector('.addMemberBtn');
 
 btnAdd.addEventListener('click', function (e) {
     let key = numberOfMembers;
@@ -178,7 +178,6 @@ btnAdd.addEventListener('click', function (e) {
 })
 
 //validation des champs au submit
-let submitBtnCreate = document.querySelector('button[name="createMember"]');
 
 submitBtnCreate.addEventListener('click', function (e) {
     let inputs = document.querySelectorAll('input');
@@ -258,7 +257,6 @@ function addMemberParticipation(memberParticipation) {
     
     allMembersName.value = allMembers;
     
-
     console.log(allMembers);
 }
 
