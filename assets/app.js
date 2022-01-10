@@ -12,5 +12,6 @@ import { Tooltip, Toast, Popover } from 'bootstrap'
 
 
 // start the Stimulus application
+import '@popperjs/core';
 import './bootstrap';
 import './inputsValidation';
