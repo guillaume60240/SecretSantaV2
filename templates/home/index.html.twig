@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Secret Santa - Accueil{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="text-center m-5">Welcome to Secret-Santa</h1>
+    <div class="bg-light p-2">
+        <h2 class="text-center">Presentation</h2>
+        <p> 
+            <h4 class="text-center">Une liste de Secret-Santa? C'est quoi ça??</h4>
+            Et bien tout simplement, c'est la certitude que tout le monde se verra offrir un cadeau sans savoir par qui!  
+            Et ça sera la surprise pour chaque Santa de découvrir qui sera le destinataire de son cadeau!</br>
+            Et si vous êtes là c'est que vous avez décidé de faire une liste de Secret Santa pour vos amis ou votre famille.
+            <h4 class="text-center">Oui mais c'est compliqué!!</h4>
+            Mais pas du tout!!! C'est simple, il suffit de remplir le formulaire ci-dessous et de cliquer sur le bouton "Valider" pour créer votre liste de Secret Santa. </br>
+            Vous pouvez ajouter autant de personnes que vous le souhaitez et vous pourrez modifier la liste à tout moment. Il est même possible d'ajouter des contraintes. Ça serait trop simple que Marge puisse offrir un cadeau à Homer!!!</br>
+            Alors suivez le guide et en avant pour les surprises!
+        </p>
+    </div>
+    <div class="mt-3">
+        <form action="#" method="post">
+            <h3 class="text-center alert alert-info">Etape 1</h3>
+            <div class="mb-3 bg-light p-2">
+                <h2 class="text-center">Vos identifiants</h2>
+                <p>
+                    Commencez par créer votre compte. C'est déjà fait? </br><a href="#">Connectez-vous</a></br>
+                    Sinon il suffit de votre adresse mail et d'un mot de passe.
+                </p>
+                <div class="form-group">
+                    <label for="email">Mail *</label>
+                    <input type="text" class="form-control" id="mail" name="email" placeholder="Votre adresse mail">
+                    <small id="mailHelpInline" class="text-muted">Entre 3 et 100 caractères, de type mail@mail.fr</small>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe *</label>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Mot de passe">
+                    <small id="passwordHelpInline" class="text-muted">Entre 8 et 20 caractères, dont 1 lettre minuscule, 1 lettre majuscule, 1 chiffre</small>
+                </div>
+                <div class="form-group">
+                    <label for="repeatPassword">Répétez votre de passe *</label>
+                    <input type="password" class="form-control" name="repeatPassword" id="repeatPassword" placeholder="Mot de passe">
+                    <small id="repeatPasswordHelpInline" class="text-muted">Les deux mots de passe doivent être identiques</small>
+                </div>
+            </div>
+            <h3 class="text-center alert alert-info">Etape 2</h3>
+            <div class="mb-3 bg-light p-2">
+                <h2 class="text-center">Description de la liste</h2>
+                <p>
+                    Dites nous en plus sur votre liste. Choisissez un nom, vous pouvez ajouter une description et n'oubliez pas la date!!
+                </p>
+                <div class="form-group">
+                    <label for="eventName">Intitulé *</label>
+                    <input type="text" class="form-control" id="eventName" name="eventName" placeholder="Intitulé de la liste">
+                    <small id="eventNameHelpInline" class="text-muted">Entre 3 et 50 caractères</small>
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Description</label>
+                    <textarea class="form-control" id="eventDescription" name="eventDescription" rows="5" placeholder="Description de la liste"></textarea>
+                    <small id="eventDescriptionHelpInline" class="text-muted">Moins de 250 caractères</small>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Date de l'évènement *</label>
+                    <input type="date" class="form-control" id="eventDate" name="eventDate">
+                    <small id="eventDateHelpInline" class="text-muted">Au format jj/mm/yyyy</small>
+                </div>
+            </div>
+            <h3 class="text-center alert alert-info">Etape 3</h3>
+            <div class="mb-3 bg-light p-2">
+                <h2 class="text-center">Les participants</h2>
+                <p>
+                    La liste des participants est prête? Alors allez y ajouter les tous.</br>
+                    Pas de craintes si vous en oubliez, vous pourrez les rajouter plus tard sur votre compte.</br>
+                    On verra plus tard pour les contraintes. Et si vous voulez participer au tirage, n'oubliez pas de cocher la petite case :
+                </p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="userIsMember">
+                    <label class="form-check-label" for="userIsMember">Cochez la case si vous participez au tirage</label></br>
+                </div>
+                <div class="form-group">
+                    <label for="memberName">Nom</label></br>
+                    <small id="memberNameHelpInline" class="text-muted">Entre 3 et 100 caractères</small>
+                    <input type="text" class="form-control" id="memberName" name="memberName" placeholder="Nom, prénom ou pseudo">
+                    <p class="addMemberBtn form-control btn btn-success mt-3">+ <small>Ajouter une autre personne</small></p>
+                    <small id="addMemberBtnDescriptionHelpInline" class="text-muted">S'il faut plus de personnes, cliquez sur le bouton!</small>
+                    <input type="hidden" name="allMembersName">
+
+                </div>
+            </div>
+            <h3 class="text-center alert alert-info">Etape 4</h3>
+            <div class="mb-3 bg-light p-2">
+                <h2 class="text-center">Validation</h2>
+                <p>
+                    C'est bon vous avez fini de remplir toutes les informations. Vous pouvez maintenant valider votre liste.</br>
+                    Mais n'oubliez pas de : </br>
+                    <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#exampleModalCenter">lire les conditions d'utilisations</button> 
+                    </br>
+                </p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="checkValidation">
+                    <label class="form-check-label" for="checkValidation">J'ai lu et j'accepte les conditions d'utilisation.</label></br>
+                    <small id="checkValidationHelpInline" class="text-muted">Nécessaire pour le bon fonctionnement du site</small> 
+                </div>
+                <div class="form-group mt-3 mb-3">
+                    <button type="submit" 
+                            class="btn btn-primary form-control position-relative" 
+                            name="createMember"
+                            
+                    >   
+                        Valider
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
