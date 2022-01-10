@@ -1,9 +1,34 @@
 @import "custom";
 @import "~bootstrap/scss/bootstrap";
 
+
+*{
+    margin: 0;
+	padding: 0;
+	border: 0;
+
+}
+
 body {
+    position: relative;
+    box-sizing: border-box;
+    min-height: 100vh;
+    min-width: 100%;
     max-width: 800px;
     margin: 0 auto;
+}
+
+#btn-back-to-top {
+    position: fixed;
+    z-index: 1;
+    bottom: 1px;
+    left: 1px;
+    display: none;
+    background: transparent;
+
+    .bi{
+        font-size: 2em;
+    }
 }
 
 p {

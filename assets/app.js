@@ -16,5 +16,5 @@ import '@popperjs/core';
 import './bootstrap.bundle.js';
 import './bootstrap';
 import './inputsValidation';
-
+import './btnBackToTop';
 
