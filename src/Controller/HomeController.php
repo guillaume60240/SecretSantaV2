@@ -16,8 +16,6 @@ class HomeController extends AbstractController
 
         //     dd($request->request->all());
         // }
-        return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
+        return $this->render('home/index.html.twig');
     }
 }
