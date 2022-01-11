@@ -25,12 +25,22 @@
                 <h2 class="text-center">Vos identifiants</h2>
                 <p>
                     Commencez par créer votre compte. C'est déjà fait? </br><a href="#">Connectez-vous</a></br>
-                    Sinon il suffit de votre adresse mail et d'un mot de passe.
+                    Sinon il suffit de remplir ce formulaire.
                 </p>
                 <div class="form-group">
                     <label for="email">Mail *</label>
                     <input type="text" class="form-control" id="mail" name="email" placeholder="Votre adresse mail">
                     <small id="mailHelpInline" class="text-muted">Entre 3 et 100 caractères, de type mail@mail.fr</small>
+                </div>
+                <div class="form-group">
+                    <label for="firstName">Votre prénom *</label>
+                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Votre prénom">
+                    <small id="firstNameHelpInline" class="text-muted">Entre 3 et 100 caractères</small>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Votre nom *</label>
+                    <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Votre nom">
+                    <small id="lastNameHelpInline" class="text-muted">Entre 3 et 100 caractères</small>
                 </div>
                 <div class="form-group">
                     <label for="password">Mot de passe *</label>
@@ -74,7 +84,7 @@
                     On verra plus tard pour les contraintes. Et si vous voulez participer au tirage, n'oubliez pas de cocher la petite case :
                 </p>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="userIsMember">
+                    <input class="form-check-input" type="checkbox" id="userIsMember" name="userIsMember">
                     <label class="form-check-label" for="userIsMember">Cochez la case si vous participez au tirage</label></br>
                 </div>
                 <div class="form-group">
@@ -97,7 +107,7 @@
                     </br>
                 </p>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="checkValidation">
+                    <input class="form-check-input" type="checkbox" id="checkValidation" name="checkValidation">
                     <label class="form-check-label" for="checkValidation">J'ai lu et j'accepte les conditions d'utilisation.</label></br>
                     <small id="checkValidationHelpInline" class="text-muted">Nécessaire pour le bon fonctionnement du site</small> 
                 </div>

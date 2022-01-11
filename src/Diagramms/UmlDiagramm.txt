@@ -1,0 +1,35 @@
+@startuml
+class User {
+    id : integer : notNull autoIncrement primaryKey
+    email : string : notNull unique
+    firstName : string : notNull
+    lastName : string : notNull
+    password : string : notNull
+}
+
+class SantaList {
+    id : integer : notNull autoIncrement primaryKey
+    name : string : notNull
+    description : text : nullable
+    eventDate : dateTime : notNull
+    generated : boolean : default false
+    userRelation : relation(User) : notNUll 
+    
+}
+
+class Santa {
+    id : integer : notNull autoIncrement primaryKey
+    firstName : string : notNull
+    lastName : string : notNull
+    token : string : notNull
+    email : string : nullable
+    userRelation : relation(User) : notNull
+    santasListRelation : relation(SanatasList) : notNull
+    giveGift : relation(Santa) : nullable
+}
+
+User "1" ^-- "many" SantaList : createdBy
+User "1" ^-- "many" Santa : createdBy
+SantaList "1" ^-- "many" Santa : participate
+Santa "1"^-- "1" Santa : giveGift
+@enduml

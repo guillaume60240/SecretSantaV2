@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -24,6 +26,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string')]
     private $password;
+
+    #[ORM\Column(type: 'string', length: 100)]
+    private $firstName;
+
+    #[ORM\Column(type: 'string', length: 100)]
+    private $lastName;
+
+    #[ORM\OneToMany(mappedBy: 'userRelation', targetEntity: SantaList::class)]
+    private $santaLists;
+
+    #[ORM\OneToMany(mappedBy: 'userRelation', targetEntity: Santa::class, orphanRemoval: true)]
+    private $santas;
+
+    public function __construct()
+    {
+        $this->santaLists = new ArrayCollection();
+        $this->santas = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -93,5 +113,89 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(?string $lastName): self
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SantaList[]
+     */
+    public function getSantaLists(): Collection
+    {
+        return $this->santaLists;
+    }
+
+    public function addSantaList(SantaList $santaList): self
+    {
+        if (!$this->santaLists->contains($santaList)) {
+            $this->santaLists[] = $santaList;
+            $santaList->setUserRelation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSantaList(SantaList $santaList): self
+    {
+        if ($this->santaLists->removeElement($santaList)) {
+            // set the owning side to null (unless already changed)
+            if ($santaList->getUserRelation() === $this) {
+                $santaList->setUserRelation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Santa[]
+     */
+    public function getSantas(): Collection
+    {
+        return $this->santas;
+    }
+
+    public function addSanta(Santa $santa): self
+    {
+        if (!$this->santas->contains($santa)) {
+            $this->santas[] = $santa;
+            $santa->setUserRelation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSanta(Santa $santa): self
+    {
+        if ($this->santas->removeElement($santa)) {
+            // set the owning side to null (unless already changed)
+            if ($santa->getUserRelation() === $this) {
+                $santa->setUserRelation(null);
+            }
+        }
+
+        return $this;
     }
 }

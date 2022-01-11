@@ -46,15 +46,15 @@ function getValidator(input) {
         case 'email':
             return /([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})/;
         case 'password':
+        case 'repeatPassword':
             return /(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,50}/;
         case 'eventName':
-            return /[.A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]{3,100}/i;
         case 'memberName':
+        case 'firstName':
+        case 'lastName':
             return /[.A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]{3,100}/i;
         case 'eventDate':
             return /([0-9]{4}-[0-9]{2}-[0-9]{2})/;
-        case 'repeatPassword':
-            return /(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,50}/;
     }  
 }
 
@@ -207,11 +207,19 @@ submitBtnCreate.addEventListener('click', function (e) {
             if (input.checked) {
                 trueInputIndication(input);
                 trueinputInfoIndication(inputInfo);
+                input.value = true;
             }  else {
                 falseInputIndication(input);
                 falseinputInfoIndication(inputInfo);
+                input.value = false;
             }
-        } 
+        } else if (input.id === 'userIsMember') {
+            if (input.checked) {
+                input.value = true;
+            } else {
+                input.value = false;
+            }
+        }
 
         if (input.classList.contains('is-invalid')) {
             error++;
