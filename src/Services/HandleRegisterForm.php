@@ -7,9 +7,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class HandleRegisterForm
 {
-    public function __construct(UserPasswordHasherInterface $hasher)
+    public function __construct(UserPasswordHasherInterface $hasher, UserService $userService, SantaListService $santaListService, SantasService $santasService)
     {
         $this->hasher = $hasher;
+        $this->userService = $userService;
+        $this->santaListService = $santaListService;
+        $this->santasService = $santasService;
     }
     
     public function dispatchData($registerForm)
@@ -36,6 +39,9 @@ class HandleRegisterForm
                                 'email' => htmlspecialchars($registerForm['email']),
                                 'password' => $this->hasher->hashPassword($user, $registerForm['password']),
                             ];
+                            // appel du service createUser
+                            $createdUser = $this->userService->createUser($userData);
+                            // dd($createdUser);
                         }
                     }
                 }
@@ -54,9 +60,11 @@ class HandleRegisterForm
                     } else {
                         $santaListData = [
                             'eventName' => htmlspecialchars($registerForm['eventName']),
-                            'eventDate' => htmlspecialchars($registerForm['eventDate']),
+                            'eventDate' => $eventDate,
                             'eventDescription' => htmlspecialchars($registerForm['eventDescription']),
                         ];
+                        // appel du service createSantaList
+                        $createdSantaList = $this->santaListService->createSantaList($santaListData, $createdUser);
                     }
                 }
             }
@@ -69,15 +77,18 @@ class HandleRegisterForm
                         return 'Le nom d\'un membre n\'est pas valide';
                     }   
                 }
-                if($registerForm['userIsMember'] === 'true') {
+                if(isset($registerForm['userIsMember']) && $registerForm['userIsMember'] == 'true') {
                             
                     array_push($santasData, htmlspecialchars($registerForm['firstName']).' '.htmlspecialchars($registerForm['lastName']));
                 } 
-            } else if ($registerForm['userIsMember'] === 'true' && empty($registerForm['allMembersName'])) {
+                $this->santasService->createSanta($santasData, $createdSantaList);
+            } else if (isset($registerForm['userIsMember']) && $registerForm['userIsMember'] == 'true'  && empty($registerForm['allMembersName'])) {
                 $santasData = htmlspecialchars($registerForm['firstName']).' '.htmlspecialchars($registerForm['lastName']);
+                $this->santasService->createSanta($santasData, $createdSantaList);
             }
-            return true;
+            // appel du service createSanta
             // dd($registerForm, $userData, $santaListData, $santasData);
+            return true;
         }
     }
 }

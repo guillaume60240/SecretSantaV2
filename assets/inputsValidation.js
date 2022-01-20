@@ -187,7 +187,7 @@ submitBtnCreate.addEventListener('click', function (e) {
     //on vérifie que tous les inputs sont valides
     inputs.forEach(input => {
        let validator = getValidator(input);
-        if (input.id === 'mail' || input.id === 'password' || input.id === 'eventName' || input.id === 'eventDate') {
+        if (input.id === 'mail' || input.id === 'password' || input.id === 'eventName' || input.id === 'eventDate' || input.id === 'firstName' || input.id === 'lastName') {
             inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
             validationInput(input, inputInfo, validator);
         } else if (input.id === 'repeatPassword') {
