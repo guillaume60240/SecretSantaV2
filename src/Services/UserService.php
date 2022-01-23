@@ -3,15 +3,18 @@
 namespace App\Services;
 
 use App\Entity\User;
+use App\Repository\SantaListRepository;
+use App\Repository\SantaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserService
 {
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, SantaListRepository $santaListRepository, SantaRepository $santaRepository)
     {
         $this->entityManager = $entityManager;
+        $this->santaListRepository = $santaListRepository;
+        $this->santaRepository = $santaRepository;
     }
-    
 
     public function createUser($createUserForm)
     {
@@ -39,5 +42,19 @@ class UserService
         } else {
             return false;
         }
+    }
+
+    public function getUserWithListsAndSantas($user)
+    {
+        $lists = $this->santaListRepository->findBy(['userRelation' => $user]);
+        foreach ($lists as $list) {
+            $santas = $this->santaRepository->findBy(['santaListRelation' => $list]);
+            foreach ($santas as $santa) {
+                $list->addSanta($santa);
+            }
+            $user->addSantaList($list);
+        }
+
+        return $user;
     }
 }

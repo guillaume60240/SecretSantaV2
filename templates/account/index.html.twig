@@ -1,8 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AccountController!{% endblock %}
+{% block title %}Secret Santa - Compte utilisateur{% endblock %}
 
 {% block body %}
-<H1>Hello AccountController!</H1>
+<H1>Bienvenue {{ app.user.firstName }} {{ app.user.lastName }}</H1>
+
+<h2>Liste et santas</h2>
+
+{{ dump(app.user.santaLists) }}
+
+{% if app.user.santaLists|length > 0 %}
+    <div class="container">
+        {% for list in app.user.santaLists %}
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="text-center">{{ list.name }}</h3>
+                    <p>{{ list.eventDate|date('d/m/Y') }}</p>
+                    {% if list.description %}
+                        <p class="text-justify">{{ list.description }}</p>
+                    {% else %}
+                        <a href="#">Ajouter une description</a>
+                    {% endif %}
+                    <p>{{ list.santas|length }} participants</p>
+                    <p>
+                        <a href="{{ path('account_list_details', {'id': list.id}) }}">Voir la liste</a>
+                        lien pour voir les santas
+                    </p>
+                    {% if list.generated == false %}
+                        {# <a href="{{ path('santa_list_generate', {'id': list.id}) }}">Générer les santas</a> #}
+                        lien de génération de liste
+                    {% else %}
+                        <p class="alert alert-success">Cette liste est générée</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+        <a href="#">Créer une nouvelle liste</a>
+    </div>
+{% else %}
+    <a href="#">Créer une liste</a>
+{% endif %}
+<hr>
+TODO :
+- Afficher les infos de l'utilisateur </br>
+- Afficher les listes de l'utilisateur </br>
+- Afficher les santas de chaque liste </br>
+- Permettre la modification des infos de l'utilisateur </br>
+- Permettre la modification des listes de l'utilisateur </br>
 
 {% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Secret Santa - Compte utilisateur - Détails d'une liste{% endblock %}
+
+{% block body %}
+<h1>Bienvenue {{ app.user.firstName }} {{ app.user.lastName }}</h1>
+<div class="container text-center">
+    <h2>Détails de la liste </h2>
+    <div class="text-center border p-3 mb-3">
+        <h3>{{ list.name }}</h3>
+        <p>{{ list.description }}</p>
+        <p>Date :  {{ list.eventDate|date('d/m/Y') }}</p>
+        <p>{{ list.santas|length }} participants</p>
+        <a href="#" class="btn btn-primary"><small>Modifier les détails</small></a>
+        <a href="#" class="btn btn-success">Générer la liste</a>
+        <a href="#" class="btn btn-danger"><small>Supprimer la liste</small></a>
+    </div>
+    <h2>Participants</h2>
+    {% set key = 1 %}
+    {% for santa in list.santas %}
+        <div class="text-center border p-3 mb-3">
+            <p><span class="border rounded-circle alert alert-success text-start p-2">{{ key }}</span></p>
+            <p class="d-flex justify-content-between"><span>{{ santa.firstName }}</span> <a href="#" class="btn btn-sm btn-outline-info align-self-end">Modifier le nom</a></p>
+            <p class="d-flex justify-content-between">
+                {% if santa.email %}
+                    <span>{{ santa.email }}</span><a href="#" class="btn btn-sm btn-outline-info">Modifier l'email</a>
+                {% else %}
+                    <span>Pas d'email</span><a href="#" class="btn btn-sm btn-outline-info">Ajouter un email</a>
+                {% endif %}
+            </p>
+            <p>
+                
+                <button 
+                    class="btn  {{ (list.generated == false ) ? 'disabled btn-outline-secondary' : 'btn-outline-success' }}" 
+                        value="{{URL_SITE}}seeyoursanta/{{list.id}}/{{ santa.token }}" 
+                        disabled
+                >
+                    Générer le lien {{ (list.generated == false ) ? '<small>(non disponible)</small>' }}
+                </button>
+                
+            </p>
+            <p>
+                {% if santa.giveGift == null %}
+                    <span class="btn btn-sm btn-outline-danger disabled">Liste non générée</span>
+                {% else %}
+                    <span class="btn btn-sm btn-outline-success disabled">Santa validé</span>
+                {% endif %}
+            </p>
+            <div class="d-flex justify-content-around">
+                <a href="#" class="text-danger">Supprimer</a>
+                <a href="#" class="text-info">Gérer les contraintes</a>
+            </div>
+        </div>
+        {% set key = key + 1 %}
+    {% endfor %}
+    <p>
+        <a href="#" class="btn btn-primary">Ajouter un participant</a>
+    </p>
+</div>
+{{ dump(list) }}
+
+
+<hr>
+TODO :
+- Afficher les infos de l'utilisateur </br>
+- Afficher les listes de l'utilisateur </br>
+- Afficher les santas de chaque liste </br>
+- Permettre la modification des infos de l'utilisateur </br>
+- Permettre la modification des listes de l'utilisateur </br>
+- Copie du lien pour le santa
+
+{% endblock %}

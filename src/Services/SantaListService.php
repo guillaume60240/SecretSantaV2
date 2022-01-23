@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entity\Santa;
 use App\Entity\SantaList;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -27,5 +28,15 @@ class SantaListService {
 
         return $santaList;
         
+    }
+
+    public function getSantaListWithSantas($santaList)
+    {
+        $santas = $this->entityManager->getRepository(Santa::class)->findBy(['santaListRelation' => $santaList]);
+        foreach ($santas as $santa) {
+            $santaList->addSanta($santa);
+        }
+
+        return $santaList;
     }
 }
