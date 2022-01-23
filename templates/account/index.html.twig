@@ -7,8 +7,6 @@
 
 <h2>Liste et santas</h2>
 
-{{ dump(app.user.santaLists) }}
-
 {% if app.user.santaLists|length > 0 %}
     <div class="container">
         {% for list in app.user.santaLists %}
