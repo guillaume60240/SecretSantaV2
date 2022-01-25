@@ -38,4 +38,11 @@ class SantasService {
         return $token;
     }
    
+    public function removeSanta($santa)
+    {
+        $this->entityManager->remove($santa);
+        $this->entityManager->flush();
+
+        return true;
+    }
 }

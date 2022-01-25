@@ -16,9 +16,10 @@
         <a href="#" class="btn btn-danger"><small>Supprimer la liste</small></a>
     </div>
     <h2>Participants</h2>
+    <div class="p-3 row justify-content-around">
     {% set key = 1 %}
     {% for santa in list.santas %}
-        <div class="text-center border p-3 mb-3">
+        <div class="text-center border p-3 mb-3 col-12 col-sm-10 col-md-8 col-lg-7 col-xl-5">
             <p><span class="border rounded-circle alert alert-success text-start p-2">{{ key }}</span></p>
             <p class="d-flex justify-content-between"><span>{{ santa.firstName }}</span> <a href="#" class="btn btn-sm btn-outline-info align-self-end">Modifier le nom</a></p>
             <p class="d-flex justify-content-between">
@@ -47,14 +48,15 @@
                 {% endif %}
             </p>
             <div class="d-flex justify-content-around">
-                <a href="#" class="text-danger">Supprimer</a>
+                <a href={{ path('remove_santa', { 'id' : list.id, 'santaId' : santa.id }) }} class="text-danger">Supprimer</a>
                 <a href="#" class="text-info">Gérer les contraintes</a>
             </div>
         </div>
         {% set key = key + 1 %}
     {% endfor %}
-    <p>
-        <a href="#" class="btn btn-primary">Ajouter un participant</a>
+    </div>
+    <p class="text-center">
+        <a href= {{ path("add_santa", {"id" : list.id}) }} class="btn btn-primary">Ajouter un participant</a>
     </p>
 </div>
 

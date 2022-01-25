@@ -2,6 +2,7 @@ let inputs = refreshInputs();
 let eventDescription = document.getElementById('eventDescription');
 let numberOfMembers = 1;
 let btnAdd = document.querySelector('.addMemberBtn');
+let submitBtnAddSanta = document.querySelector('button[name="submitAddSanta"]');
 let submitBtnCreate = document.querySelector('button[name="createMember"]');
 
 
@@ -82,14 +83,16 @@ function validationInput(input, inputInfo, validator) {
 }
 
 //gestion du textarea
-eventDescription.addEventListener('input', () => {
+if(eventDescription) {
+    eventDescription.addEventListener('input', () => {
 
-    let eventDescriptionInfo = document.querySelector('small[id="eventDescriptionHelpInline"]');
-    let charatersLeft = (250 - eventDescription.value.length);
-    eventDescriptionInfo.innerHTML = charatersLeft + " caractères restants";
+        let eventDescriptionInfo = document.querySelector('small[id="eventDescriptionHelpInline"]');
+        let charatersLeft = (250 - eventDescription.value.length);
+        eventDescriptionInfo.innerHTML = charatersLeft + " caractères restants";
 
-    validTextArea(eventDescription, eventDescriptionInfo);
-});
+        validTextArea(eventDescription, eventDescriptionInfo);
+    });
+}
 
 function validTextArea(eventDescription, eventDescriptionInfo) {
     if (eventDescription.value.length > 0 && eventDescription.value.length < 250) {
@@ -160,98 +163,139 @@ function dateVerify(input, inputInfo) {
 }
 
 //Ajout de noms de membres
+if(btnAdd){
 
-btnAdd.addEventListener('click', function (e) {
-    let key = numberOfMembers;
-    let div = document.createElement('div');
-    div.classList.add('form-group');
-    let input = document.createElement('input');
-    input.classList.add('form-control');
-    input.classList.add('mt-2');
-    input.name = 'memberName';
-    input.placeholder = 'Nom, prénom ou pseudo';
-    input.id = `memberName${key}`;
-    div.appendChild(input);
-    btnAdd.parentNode.insertBefore(div, btnAdd);
-
-    return numberOfMembers = key + 1,refreshInputs();
-})
+    btnAdd.addEventListener('click', function (e) {
+        console.log('add');
+        let key = numberOfMembers;
+        let div = document.createElement('div');
+        div.classList.add('form-group');
+        let input = document.createElement('input');
+        input.classList.add('form-control');
+        input.classList.add('mt-2');
+        input.name = 'memberName';
+        input.placeholder = 'Nom, prénom ou pseudo';
+        input.id = `memberName${key}`;
+        div.appendChild(input);
+        btnAdd.parentNode.insertBefore(div, btnAdd);
+        
+        return numberOfMembers = key + 1,refreshInputs();
+    })
+}
 
 //validation des champs au submit
 
-submitBtnCreate.addEventListener('click', function (e) {
-    let inputs = document.querySelectorAll('input');
-    let error = 0;
-    let inputInfo = null;
+if(submitBtnCreate) {
+    submitBtnCreate.addEventListener('click', function (e) {
+        let inputs = document.querySelectorAll('input');
+        let error = 0;
+        let inputInfo = null;
 
-    //on vérifie que tous les inputs sont valides
-    inputs.forEach(input => {
-       let validator = getValidator(input);
-        if (input.id === 'mail' || input.id === 'password' || input.id === 'eventName' || input.id === 'eventDate' || input.id === 'firstName' || input.id === 'lastName') {
-            inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
-            validationInput(input, inputInfo, validator);
-        } else if (input.id === 'repeatPassword') {
-            inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
-            let password = document.querySelector('input[name="password"]');
-            if (input.value === password.value && password.classList.contains('is-valid')) {
-                trueInputIndication(input);
-            } else {
-                falseInputIndication(input);
-                falseinputInfoIndication(inputInfo);
+        //on vérifie que tous les inputs sont valides
+        inputs.forEach(input => {
+        let validator = getValidator(input);
+            if (input.id === 'mail' || input.id === 'password' || input.id === 'eventName' || input.id === 'eventDate' || input.id === 'firstName' || input.id === 'lastName') {
+                inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
+                validationInput(input, inputInfo, validator);
+            } else if (input.id === 'repeatPassword') {
+                inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
+                let password = document.querySelector('input[name="password"]');
+                if (input.value === password.value && password.classList.contains('is-valid')) {
+                    trueInputIndication(input);
+                } else {
+                    falseInputIndication(input);
+                    falseinputInfoIndication(inputInfo);
+                }
+            } else if (input.name === 'memberName') {
+                inputInfo = document.querySelector('small[id="memberNameHelpInline"]');
+                validationInput(input, inputInfo, validator);
+            } else if(input.id === 'checkValidation') {
+                inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
+                if (input.checked) {
+                    trueInputIndication(input);
+                    trueinputInfoIndication(inputInfo);
+                    input.value = true;
+                }  else {
+                    falseInputIndication(input);
+                    falseinputInfoIndication(inputInfo);
+                    input.value = false;
+                }
+            } else if (input.id === 'userIsMember') {
+                if (input.checked) {
+                    input.value = true;
+                } else {
+                    input.value = false;
+                }
             }
-        } else if (input.name === 'memberName') {
-            inputInfo = document.querySelector('small[id="memberNameHelpInline"]');
-            validationInput(input, inputInfo, validator);
-        } else if(input.id === 'checkValidation') {
-            inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
-            if (input.checked) {
-                trueInputIndication(input);
-                trueinputInfoIndication(inputInfo);
-                input.value = true;
-            }  else {
-                falseInputIndication(input);
-                falseinputInfoIndication(inputInfo);
-                input.value = false;
-            }
-        } else if (input.id === 'userIsMember') {
-            if (input.checked) {
-                input.value = true;
-            } else {
-                input.value = false;
-            }
-        }
 
-        if (input.classList.contains('is-invalid')) {
+            if (input.classList.contains('is-invalid')) {
+                error++;
+            }
+        });
+        //on vérifie le textArea
+        let eventDescription = document.querySelector('textarea[name="eventDescription"]');
+        let eventDescriptionInfo = document.querySelector('small[id="eventDescriptionHelpInline"]');
+        validTextArea(eventDescription, eventDescriptionInfo);
+        if (eventDescription.classList.contains('is-invalid')) {
             error++;
         }
+
+        //on compte les erreurs et on affiche le message d'erreur sinon on remplit l'input hidden pour les membres et on envoie le formulaire
+        if (error != 0) {
+            e.preventDefault();
+            let div = document.createElement('div');
+            div.classList.add('alert', 'alert-danger', 'error-submission-message');
+            div.innerHTML = 'Vous avez ' + error + ' erreur(s)';
+            body = document.querySelector('body');
+            submitBtnCreate.appendChild(div);
+
+            setTimeout(() => {
+                div.remove();
+            }, 3000);
+
+        } else {
+
+            let memberParticipation = document.querySelectorAll('input[name="memberName"]');
+            addMemberParticipation(memberParticipation);
+        }
     });
-    //on vérifie le textArea
-    let eventDescription = document.querySelector('textarea[name="eventDescription"]');
-    let eventDescriptionInfo = document.querySelector('small[id="eventDescriptionHelpInline"]');
-    validTextArea(eventDescription, eventDescriptionInfo);
-    if (eventDescription.classList.contains('is-invalid')) {
-        error++;
-    }
+}
 
-    //on compte les erreurs et on affiche le message d'erreur sinon on remplit l'input hidden pour les membres et on envoie le formulaire
-    if (error != 0) {
-        e.preventDefault();
-        let div = document.createElement('div');
-        div.classList.add('alert', 'alert-danger', 'error-submission-message');
-        div.innerHTML = 'Vous avez ' + error + ' erreur(s)';
-        body = document.querySelector('body');
-        submitBtnCreate.appendChild(div);
+//validation des champs au submit addSanta
+if(submitBtnAddSanta) {
+    submitBtnAddSanta.addEventListener('click', function (e) {
+        let inputs = document.querySelectorAll('input');
+        let error = 0;
+        let inputInfo = null;
+        inputs.forEach(input => {
+            let validator = getValidator(input);
+            if (input.name === 'memberName') {
+                inputInfo = document.querySelector('small[id="memberNameHelpInline"]');
+                validationInput(input, inputInfo, validator);
+            }
+            if (input.classList.contains('is-invalid')) {
+                error++;
+            }
+        })
+        if (error != 0) {
+            e.preventDefault();
+            let div = document.createElement('div');
+            div.classList.add('alert', 'alert-danger', 'error-submission-message');
+            div.innerHTML = 'Vous avez ' + error + ' erreur(s)';
+            body = document.querySelector('body');
+            submitBtnAddSanta.appendChild(div);
 
-        setTimeout(() => {
-            div.remove();
-        }, 3000);
+            setTimeout(() => {
+                div.remove();
+            }, 3000);
 
-    } else {
+        } else {
 
-        let memberParticipation = document.querySelectorAll('input[name="memberName"]');
-        addMemberParticipation(memberParticipation);
-    }
-});
+            let memberParticipation = document.querySelectorAll('input[name="memberName"]');
+            addMemberParticipation(memberParticipation);
+        }
+    })
+}
 
 //ajout des membres à la liste pour les récupérer dans la requête
 function addMemberParticipation(memberParticipation) {

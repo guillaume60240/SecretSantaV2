@@ -91,4 +91,21 @@ class HandleRegisterForm
             return true;
         }
     }
+
+    public function addSanta($santaForm, $activeList)
+    {
+        if (!empty($santaForm['allMembersName'])) {
+
+            $santasData = explode(',', $santaForm['allMembersName']);
+            foreach($santasData as $santaData) {
+                if (!preg_match("/[.A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]{3,100}/i", $santaData)) {
+                    return 'Le nom d\'un membre n\'est pas valide';
+                }   
+            }
+            
+            $this->santasService->createSanta($santasData, $activeList);
+        }
+
+        return true;
+    }
 }
