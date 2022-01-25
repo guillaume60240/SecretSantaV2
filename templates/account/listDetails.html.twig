@@ -21,10 +21,10 @@
     {% for santa in list.santas %}
         <div class="text-center border p-3 mb-3 col-12 col-sm-10 col-md-8 col-lg-7 col-xl-5">
             <p><span class="border rounded-circle alert alert-success text-start p-2">{{ key }}</span></p>
-            <p class="d-flex justify-content-between"><span>{{ santa.firstName }}</span> <a href="#" class="btn btn-sm btn-outline-info align-self-end">Modifier le nom</a></p>
+            <p class="d-flex justify-content-between"><span id="firstName-{{santa.id}}">{{ santa.firstName }}</span> <span class="btn btn-sm btn-outline-info align-self-end changeNameBtn" id="{{santa.id}}">Modifier le nom</span></p>
             <p class="d-flex justify-content-between">
                 {% if santa.email %}
-                    <span>{{ santa.email }}</span><a href="#" class="btn btn-sm btn-outline-info">Modifier l'email</a>
+                    <span>{{ santa.email }}</span><span  class="btn btn-sm btn-outline-info"">Modifier l'email</span>
                 {% else %}
                     <span>Pas d'email</span><a href="#" class="btn btn-sm btn-outline-info">Ajouter un email</a>
                 {% endif %}
