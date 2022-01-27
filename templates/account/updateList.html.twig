@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{site_name}} - Compte utilisateur - Modifier une liste{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="bg-light p-2">
+            <h2 class="text-center">Modifier une liste</h2>
+            <p> 
+                Ajouter ou modifier la description, changer la date ou le nom de votre évènement? C'est ici que ça se passe.
+            </p>
+        </div>
+        <form action="#">
+            <div class="mb-3 bg-light p-2">
+                
+                <div class="form-group">
+                    <label for="eventName">Intitulé *</label>
+                    <input type="text" class="form-control" id="eventName" name="eventName" value="{{ list.name }}">
+                    <small id="eventNameHelpInline" class="text-muted">Entre 3 et 50 caractères</small>
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Description</label>
+                    <textarea class="form-control" id="eventDescription" name="eventDescription" rows="5" value="{{ list.description }}">{{ list.description }}</textarea>
+                    <small id="eventDescriptionHelpInline" class="text-muted">Moins de 250 caractères</small>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Date de l'évènement *</label>
+                    <input type="date" class="form-control" id="newEventDate" name="eventDate" value={{ list.eventDate | date("Y-m-d") }}  min="{{ "now" | date("Y-m-d") }}">
+                    <small id="eventDateHelpInline" class="text-muted" >Au format jj/mm/yyyy </small>
+                </div>
+            </div>
+        </form>
+        <div class="container">
+            <a href={{ path('account_list_details', {'id' : list.id}) }}>Annuler</a>
+        </div>
+    </div>
+
+{% endblock %}

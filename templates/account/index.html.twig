@@ -1,43 +1,56 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Secret Santa - Compte utilisateur{% endblock %}
+{% block title %}{{ site_name }} - Compte utilisateur{% endblock %}
 
 {% block body %}
-<H1>Bienvenue {{ app.user.firstName }} {{ app.user.lastName }}</H1>
-
-<h2>Liste et santas</h2>
-
-{% if app.user.santaLists|length > 0 %}
-    <div class="container">
-        {% for list in app.user.santaLists %}
-            <div class="row">
-                <div class="col-md-12">
-                    <h3 class="text-center">{{ list.name }}</h3>
-                    <p>{{ list.eventDate|date('d/m/Y') }}</p>
-                    {% if list.description %}
-                        <p class="text-justify">{{ list.description }}</p>
-                    {% else %}
-                        <a href="#">Ajouter une description</a>
-                    {% endif %}
-                    <p>{{ list.santas|length }} participants</p>
-                    <p>
-                        <a href="{{ path('account_list_details', {'id': list.id}) }}">Voir la liste</a>
-                        lien pour voir les santas
-                    </p>
-                    {% if list.generated == false %}
-                        {# <a href="{{ path('santa_list_generate', {'id': list.id}) }}">Générer les santas</a> #}
-                        lien de génération de liste
-                    {% else %}
-                        <p class="alert alert-success">Cette liste est générée</p>
-                    {% endif %}
-                </div>
-            </div>
-        {% endfor %}
-        <a href="#">Créer une nouvelle liste</a>
+<div class="container">
+    <div class="bg-light p-2">
+        <h2 class="text-center">Votre espace</h2>
+        <p> 
+            <h4 class="text-center">Prêt pour tout manager?</h4>
+            C'est ici que vous pourrez retrouver toutes les listes que vous avez créées. Vous pourrez les modifier, les consulter ou en créer de nouvelles.
+        </p>
     </div>
-{% else %}
-    <a href="#">Créer une liste</a>
-{% endif %}
+
+    {% if app.user.santaLists|length > 0 %}
+        <div class="container bg-light mt-5">
+            
+            {% for list in app.user.santaLists %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-center">{{ list.name }}</h3>
+                        <p>{{ list.eventDate|date('d/m/Y') }}</p>
+                        {% if list.description %}
+                            <p class="text-justify">{{ list.description }}</p>
+                        {% else %}
+                            <a href="#">Ajouter une description</a>
+                        {% endif %}
+                        <p>{{ list.santas|length }} participants</p>
+                        <p>
+                            <a href="{{ path('account_list_details', {'id': list.id}) }}">Voir les détails</a>
+                        </p>
+                        {% if list.generated == false %}
+                            {# <a href="{{ path('santa_list_generate', {'id': list.id}) }}">Générer les santas</a> #}
+                            lien de génération de liste
+                        {% else %}
+                            <p class="alert alert-success">Cette liste est générée</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+                
+        </div>
+        <div class="mt-5">
+            <a href="#" class="btn btn-success">Créer une nouvelle liste</a>
+        </div>
+    {% else %}
+        <div class="container bg-light">
+            <p>Vous n'avez pas encore de liste disponible</p>
+            <a href="#" >Créer une liste</a>
+        </div>
+    {% endif %}
+</div>
+
 <hr>
 TODO :
 - Afficher les infos de l'utilisateur </br>

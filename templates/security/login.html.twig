@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Secret Santa - Connexion{% endblock %}
+{% block title %}{{ site_name }} - Connexion{% endblock %}
 
 {% block body %}
-<div class="container">
+<div class="container mb-5 mt-5">
     <form method="post">
         {% if error %}
             <div class="alert alert-danger text-center">{{ error.messageKey|trans(error.messageData, 'security')| replace({"Invalid credentials." : "Erreur dans l'identifiant ou le mot de passe." }) }}</div>
@@ -15,7 +15,7 @@
             </div>
         {% endif %}
 
-        <h1 class="h3 mb-3 font-weight-normal">Vous pouvez vous connecter</h1>
+        <h1 class="h3 mb-3 font-weight-normal text-center">Vous pouvez vous connecter</h1>
         <div class="form-group">
             <label for="inputEmail">Votre Email</label>
             <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Votre Email" autocomplete="email" required autofocus>
@@ -42,10 +42,11 @@
                 </label>
             </div>
         #}
-
-        <button class="btn btn-lg btn-primary mt-3" type="submit">
-            Connexion
-        </button>
+        <div class="form-group mt-3 mb-3">
+            <button class="btn  btn-primary form-control mt-3" type="submit">
+                Connexion
+            </button>
+        </div>
     </form>
 </div>
 {% endblock %}

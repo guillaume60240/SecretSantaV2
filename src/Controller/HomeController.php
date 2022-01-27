@@ -13,6 +13,9 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(Request $request, HandleRegisterForm $form): Response
     {
+        if($this->getUser()) {
+            return $this->redirectToRoute('account');
+        }
         if(isset($_POST['createMember'])){
             // dd($request->request->all());
             $submission = $form->dispatchData($request->request->all());

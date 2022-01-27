@@ -1,9 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello SantaController!{% endblock %}
+{% block title %}{{ site_name }} - Ajouter des participants{% endblock %}
 
 {% block body %}
 <div class="container">
+    <div class="bg-light p-2 mb-3">
+        <h2 class="text-center">Ajout de participants</h2>
+        <p> 
+            
+            D'ici vous pouvez ajouter tous les participants dont vous avez besoin. </br>
+            Pas d'inquiétude si vous faites des erreurs vous pourrez tout modifier plus tard.
+        </p>
+    </div>
     <form action="#" method="post">
         {% include "partials/forms/_newSantaForm.html.twig" %}
         <div class="form-group mt-3 mb-3">
@@ -14,6 +22,7 @@
             >   
                 Valider
             </button>
+        </div>
     </form>
 </div>
 {% endblock %}

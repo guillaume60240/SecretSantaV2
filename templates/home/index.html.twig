@@ -4,7 +4,6 @@
 
 {% block body %}
 <div class="container">
-    <h1 class="text-center m-5">Welcome to Secret-Santa</h1>
     <div class="bg-light p-2">
         <h2 class="text-center">Presentation</h2>
         <p> 
@@ -71,7 +70,7 @@
                 </div>
                 <div class="form-group">
                     <label for="eventDate">Date de l'évènement *</label>
-                    <input type="date" class="form-control" id="eventDate" name="eventDate">
+                    <input type="date" class="form-control" id="eventDate" name="eventDate" min="{{ "now" | date("Y-m-d") }}">
                     <small id="eventDateHelpInline" class="text-muted">Au format jj/mm/yyyy</small>
                 </div>
             </div>
@@ -115,4 +114,5 @@
             </div>
         </form>
     </div>
+</div>
 {% endblock %}

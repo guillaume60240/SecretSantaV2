@@ -1,5 +1,6 @@
 @import "custom";
 @import "~bootstrap/scss/bootstrap";
+@import "_footer.scss";
 
 
 *{
@@ -52,6 +53,11 @@ textArea {
     resize: none;
     overflow-y: scroll;
 }
+.form-group{
+    max-width: 500px;
+    margin: 0 auto;
+}
+
 
 .error-submission-message{
     position: absolute;

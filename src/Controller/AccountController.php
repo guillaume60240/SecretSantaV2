@@ -51,4 +51,27 @@ class AccountController extends AbstractController
             'list' => $list,
         ]);
     }
+
+    #[Route('/compte/update-liste/{id}', name: 'list_update')]
+    public function updateList(SantaListRepository $santaListRepository, SantaListService $santaListService, SantasService $santasService, $id): Response
+    {   
+        $list = $santaListRepository->findOneBy(['id' => $id]);
+        if(!$list || $list->getUserRelation()->getUserIdentifier() !== $this->getUser()->getUserIdentifier()){
+            return $this->redirectToRoute('account');
+        } 
+        $list = $santaListService->getSantaListWithSantas($list);
+        // dd($user);
+        if(isset($_POST['updateSantaName'])){
+            $action = $santasService->updateSantaName($_POST, $list, $this->getUser());
+            if($action === true){
+                $this->addFlash('success', 'Le nom du santa a bien été modifié');
+                return $this->redirectToRoute('account_list_details', ['id' => $id]);
+            } else {
+                $this->addFlash('error', $action);
+            }
+        }
+        return $this->render('account/updateList.html.twig', [
+            'list' => $list,
+        ]);
+    }
 }

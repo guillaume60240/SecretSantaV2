@@ -21,9 +21,12 @@
         <button type="button" id="btn-back-to-top">
             <i class="bi bi-arrow-up-circle-fill"></i>
         </button>
+        {{ include('./partials/_header.html.twig') }}
         {{ include('./partials/_flashesMessage.html.twig') }}
         
         {% block body %}{% endblock %}
+
+        {{ include('./partials/_footer.html.twig') }}
        {{ include('./partials/_conditionsModal.html.twig') }}
     </body>
 </html>
