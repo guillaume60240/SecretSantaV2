@@ -23,9 +23,9 @@
             <p class="d-flex justify-content-between"><span id="firstName-{{santa.id}}">{{ santa.firstName }}</span> <span class="btn btn-sm btn-outline-info align-self-end changeNameBtn" id="{{santa.id}}">Modifier le nom</span></p>
             <p class="d-flex justify-content-between">
                 {% if santa.email %}
-                    <span>{{ santa.email }}</span><span  class="btn btn-sm btn-outline-info">Modifier l'email</span>
+                    <span id="email-{{santa.id}}">{{ santa.email }}</span> <span class="btn btn-sm btn-outline-info align-self-end changeEmailBtn" id="{{santa.id}}">Modifier le mail</span>
                 {% else %}
-                    <span>Pas d'email</span><a href="#" class="btn btn-sm btn-outline-info">Ajouter un email</a>
+                    <span id="email-{{santa.id}}">Pas d'email</span> <span class="btn btn-sm btn-outline-info align-self-end changeEmailBtn" id="{{santa.id}}">Ajouter un mail</span>
                 {% endif %}
             </p>
             <p>

@@ -10,7 +10,7 @@
                 Ajouter ou modifier la description, changer la date ou le nom de votre évènement? C'est ici que ça se passe.
             </p>
         </div>
-        <form action="#">
+        <form action="#" method="post">
             <div class="mb-3 bg-light p-2">
                 
                 <div class="form-group">
@@ -27,6 +27,15 @@
                     <label for="eventDate">Date de l'évènement *</label>
                     <input type="date" class="form-control" id="newEventDate" name="eventDate" value={{ list.eventDate | date("Y-m-d") }}  min="{{ "now" | date("Y-m-d") }}">
                     <small id="eventDateHelpInline" class="text-muted" >Au format jj/mm/yyyy </small>
+                </div>
+                <div class="form-group mt-3 mb-3">
+                    <button type="submit" 
+                            class="btn btn-primary form-control position-relative" 
+                            name="updateList"
+                            
+                    >   
+                        Valider
+                    </button>
                 </div>
             </div>
         </form>

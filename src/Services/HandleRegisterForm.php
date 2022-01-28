@@ -3,16 +3,18 @@
 namespace App\Services;
 
 use App\Entity\User;
+use App\Repository\SantaRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class HandleRegisterForm
 {
-    public function __construct(UserPasswordHasherInterface $hasher, UserService $userService, SantaListService $santaListService, SantasService $santasService)
+    public function __construct(UserPasswordHasherInterface $hasher, UserService $userService, SantaListService $santaListService, SantasService $santasService, SantaRepository $santaRepository)
     {
         $this->hasher = $hasher;
         $this->userService = $userService;
         $this->santaListService = $santaListService;
         $this->santasService = $santasService;
+        $this->santaRepository = $santaRepository;
     }
     
     public function dispatchData($registerForm)
@@ -107,5 +109,86 @@ class HandleRegisterForm
         }
 
         return true;
+    }
+
+    public function updateSantaName($santaForm, $santaList, $user)
+    {
+        if (!empty($santaForm['updateSantaName'])) {
+            // dd($santaForm);
+            $updatedSanta = $this->santaRepository->findOneBy(['id' => $santaForm['updateSantaName']]);
+            if(!$updatedSanta){
+                return 'Une erreur est survenue';
+            }
+            if($updatedSanta->getUserRelation()->getUserIdentifier() !== $user->getUserIdentifier()){
+                return 'Vous n\'avez pas le droit de modifier ce santa';
+            }
+            if($updatedSanta->getSantaListRelation() !== $santaList){
+                return 'Vous n\'avez pas le droit de modifier ce santa';
+            }
+            if (!preg_match("/[.A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]{3,100}/i", $santaForm['memberName'])) {
+                return 'Le nom d\'un membre n\'est pas valide';
+            }  
+            
+            $this->santasService->updateSantaName($updatedSanta, htmlspecialchars($santaForm['memberName']));
+            
+            return true;
+        } else {
+            return 'Veuillez renseigner un nom de santa';
+        }
+
+    }
+
+    public function updateSantaMail($form, $list, $user)
+    {
+        if (!empty($form['updateSantaMail'])) {
+            // dd($form);
+            $updatedSanta = $this->santaRepository->findOneBy(['id' => $form['updateSantaMail']]);
+            if(!$updatedSanta){
+                return 'Une erreur est survenue';
+            }
+            if($updatedSanta->getUserRelation()->getUserIdentifier() !== $user->getUserIdentifier()){
+                return 'Vous n\'avez pas le droit de modifier ce santa';
+            }
+            if($updatedSanta->getSantaListRelation() !== $list){
+                return 'Vous n\'avez pas le droit de modifier ce santa';
+            }
+            if (!preg_match("/([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})/", $form['memberEmail'])) {
+                return 'L\'adresse mail d\'un membre n\'est pas valide';
+            }  
+            
+            $this->santasService->updateSantaMail($updatedSanta, htmlspecialchars($form['memberEmail']));
+            
+            return true;
+        } else {
+            return 'Veuillez renseigner une adresse mail de santa';
+        }
+
+    }
+
+    public function updateList($form, $list)
+    {
+        if (!preg_match("/[.A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]{3,100}/i", $form['eventName'])) {
+            return 'Le nom de l\'événement n\'est pas valide';
+        } else {
+            $today = new \DateTime();
+            $eventDate = new \DateTime($form['eventDate']);
+            if ($eventDate < $today) {
+                return 'La date de l\'événement n\'est pas valide';
+            } else {
+                if (!empty($form['eventDescription']) && !preg_match("/[.A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]{3,300}/i", $form['eventDescription'])) {
+                    return 'La description de l\'événement n\'est pas valide';
+                } else {
+                    $santaListData = [
+                        'eventName' => htmlspecialchars($form['eventName']),
+                        'eventDate' => $eventDate,
+                        'eventDescription' => htmlspecialchars($form['eventDescription']),
+                    ];
+                    // appel du service update list
+                    $submission = $this->santaListService->updateList($santaListData, $list);
+
+                    return $submission;
+                }
+            }
+        }
     }
 }

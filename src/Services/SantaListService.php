@@ -39,4 +39,15 @@ class SantaListService {
 
         return $santaList;
     }
+
+    public function updateList($form, $list)
+    {
+        $list->setName($form['eventName']);
+        $list->setEventDate($form['eventDate']);
+        $list->setDescription($form['eventDescription']);
+        $this->entityManager->persist($list);
+        $this->entityManager->flush();
+
+        return true;
+    }
 }

@@ -47,20 +47,18 @@ class SantasService {
         return true;
     }
 
-    public function updateSantaName($santa, $santaList, $user)
+    public function updateSantaName($updatedSanta, $santaName)
     {
-        $updatedSanta = $this->santaRepository->findOneBy(['id' => $santa['updateSantaName']]);
-        if(!$updatedSanta){
-            return 'Une erreur est survenue';
-        }
-        if($updatedSanta->getUserRelation()->getUserIdentifier() !== $user->getUserIdentifier()){
-            return 'Vous n\'avez pas le droit de modifier ce santa';
-        }
-        if($updatedSanta->getSantaListRelation() !== $santaList){
-            return 'Vous n\'avez pas le droit de modifier ce santa';
-        }
+        $updatedSanta->setFirstName($santaName);
+        $this->entityManager->persist($updatedSanta);
+        $this->entityManager->flush();
 
-        $updatedSanta->setFirstName($santa['memberName']);
+        return true;
+    }
+
+    public function updateSantaMail($updatedSanta, $santaMail)
+    {
+        $updatedSanta->setEmail($santaMail);
         $this->entityManager->persist($updatedSanta);
         $this->entityManager->flush();
 
