@@ -10,9 +10,13 @@
         <p>{{ list.description }}</p>
         <p>Date :  {{ list.eventDate|date('d/m/Y') }}</p>
         <p>{{ list.santas|length }} participants</p>
-        <a href={{ path('list_update', {"id" : list.id}) }} class="btn btn-primary"><small>Modifier les détails</small></a>
-        <a href="#" class="btn btn-success">Générer la liste</a>
-        <a href="#" class="btn btn-danger"><small>Supprimer la liste</small></a>
+        <div>
+            <a href={{ path('list_update', {"id" : list.id}) }} class="btn btn-primary"><small>Modifier les détails</small></a>
+            <a href="#" class="btn btn-danger"><small>Supprimer la liste</small></a>
+        </div>
+        <div class="mt-3">
+            <a href="#" class="btn btn-success">Générer la liste</a>
+        </div>
     </div>
     <h2>Participants</h2>
     <div class="p-3 row justify-content-around">
@@ -61,13 +65,13 @@
 
 
 
-<hr>
+{# <hr>
 TODO :
 - Afficher les infos de l'utilisateur </br>
 - Afficher les listes de l'utilisateur </br>
 - Afficher les santas de chaque liste </br>
 - Permettre la modification des infos de l'utilisateur </br>
 - Permettre la modification des listes de l'utilisateur </br>
-- Copie du lien pour le santa
+- Copie du lien pour le santa #}
 
 {% endblock %}
