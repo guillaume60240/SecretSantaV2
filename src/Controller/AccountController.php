@@ -103,4 +103,16 @@ class AccountController extends AbstractController
 
         ]);
     }
+
+    #[Route('/compte/delete-list/{id}', name: 'delete_list')]
+    public function deleteList($id, SantaListService $santaListService, SantaListRepository $santaListRepository)
+    {
+        $list = $santaListRepository->findOneBy(['id' => $id]);
+        if(!$list || $list->getUserRelation()->getUserIdentifier() !== $this->getUser()->getUserIdentifier()){
+            return $this->redirectToRoute('account');
+        } 
+        $santaListService->deleteList($list);
+        $this->addFlash('success', 'La liste a bien été supprimée');
+        return $this->redirectToRoute('account');
+    }
 }

@@ -8,18 +8,19 @@
         <h2 class="text-center">Votre espace</h2>
         <p> 
             <h4 class="text-center">Prêt pour tout manager?</h4>
-            C'est ici que vous pourrez retrouver toutes les listes que vous avez créées. Vous pourrez les modifier, les consulter ou en créer de nouvelles.
+            C'est ici que vous pourrez retrouver toutes les listes que vous avez créées. Vous pourrez les consulter ou en créer de nouvelles.
         </p>
     </div>
 
     {% if app.user.santaLists|length > 0 %}
-        <div class="container bg-light mt-5">
+        <div class="container row justify-content-around  mt-3">
             
             {% for list in app.user.santaLists %}
+            <div class="col-12 col-md-7 col-xl-5 bg-light mt-3">
                 <div class="row">
                     <div class="col-md-12">
                         <h3 class="text-center">{{ list.name }}</h3>
-                        <p>{{ list.eventDate|date('d/m/Y') }}</p>
+                        <p>Date de l'évènement : {{ list.eventDate|date('d/m/Y') }}</p>
                         {% if list.description %}
                             <p class="text-justify">{{ list.description }}</p>
                         {% else %}
@@ -37,6 +38,7 @@
                         {% endif %}
                     </div>
                 </div>
+            </div>
             {% endfor %}
                 
         </div>
@@ -50,13 +52,5 @@
         </div>
     {% endif %}
 </div>
-
-<hr>
-TODO :
-- Afficher les infos de l'utilisateur </br>
-- Afficher les listes de l'utilisateur </br>
-- Afficher les santas de chaque liste </br>
-- Permettre la modification des infos de l'utilisateur </br>
-- Permettre la modification des listes de l'utilisateur </br>
 
 {% endblock %}

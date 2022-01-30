@@ -50,4 +50,12 @@ class SantaListService {
 
         return true;
     }
+
+    public function deleteList($list)
+    {
+        $this->entityManager->remove($list);
+        $this->entityManager->flush();
+
+        return true;
+    }
 }

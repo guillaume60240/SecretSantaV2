@@ -12,7 +12,7 @@
         <p>{{ list.santas|length }} participants</p>
         <div>
             <a href={{ path('list_update', {"id" : list.id}) }} class="btn btn-primary"><small>Modifier les détails</small></a>
-            <a href="#" class="btn btn-danger"><small>Supprimer la liste</small></a>
+            <a href={{ path('delete_list', {"id" : list.id}) }} class="btn btn-danger"><small>Supprimer la liste</small></a>
         </div>
         <div class="mt-3">
             <a href="#" class="btn btn-success">Générer la liste</a>
