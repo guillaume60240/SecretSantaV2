@@ -16,6 +16,9 @@ class AccountController extends AbstractController
     #[Route('/compte', name: 'account')]
     public function index(UserRepository $userRepository, UserService $userService): Response
     {   
+        if(!$this->getUser()){
+            return $this->redirectToRoute('home');
+        }
         $user = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
         
         if($user){
@@ -32,6 +35,9 @@ class AccountController extends AbstractController
     #[Route('/compte/details-liste/{id}', name: 'account_list_details')]
     public function lists(SantaListRepository $santaListRepository, SantaListService $santaListService, HandleRegisterForm $handleRegisterForm, $id): Response
     {   
+        if(!$this->getUser()){
+            return $this->redirectToRoute('home');
+        }
         $list = $santaListRepository->findOneBy(['id' => $id]);
         if(!$list || $list->getUserRelation()->getUserIdentifier() !== $this->getUser()->getUserIdentifier()){
             return $this->redirectToRoute('account');
@@ -64,6 +70,9 @@ class AccountController extends AbstractController
     #[Route('/compte/update-liste/{id}', name: 'list_update')]
     public function updateList(SantaListRepository $santaListRepository, SantaListService $santaListService, HandleRegisterForm $handleRegisterForm, $id): Response
     {   
+        if(!$this->getUser()){
+            return $this->redirectToRoute('home');
+        }
         $list = $santaListRepository->findOneBy(['id' => $id]);
         if(!$list || $list->getUserRelation()->getUserIdentifier() !== $this->getUser()->getUserIdentifier()){
             return $this->redirectToRoute('account');
@@ -89,6 +98,9 @@ class AccountController extends AbstractController
     #[Route('/compte/create-liste', name: 'create_list')]
     public function createList(HandleRegisterForm $handleRegisterForm)
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('home');
+        }
         if(isset($_POST['submitCreateList'])){
             $action = $handleRegisterForm->createList($_POST, $this->getUser());
             if($action === true){
@@ -107,6 +119,9 @@ class AccountController extends AbstractController
     #[Route('/compte/delete-list/{id}', name: 'delete_list')]
     public function deleteList($id, SantaListService $santaListService, SantaListRepository $santaListRepository)
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('home');
+        }
         $list = $santaListRepository->findOneBy(['id' => $id]);
         if(!$list || $list->getUserRelation()->getUserIdentifier() !== $this->getUser()->getUserIdentifier()){
             return $this->redirectToRoute('account');

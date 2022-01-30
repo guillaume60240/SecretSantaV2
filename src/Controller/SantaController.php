@@ -16,6 +16,9 @@ class SantaController extends AbstractController
     #[Route('/santa/{id}', name: 'add_santa')]
     public function add(SantaListRepository $santaListRepository, Request $request, HandleRegisterForm $form, $id): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('home');
+        }
         $activeList = $santaListRepository->findOneBy(['id' => $id]);
         if( !$activeList || $activeList->getUserRelation() !== $this->getUser() ) {
             return $this->redirectToRoute('account');
@@ -38,6 +41,9 @@ class SantaController extends AbstractController
     #[Route('/santa/{id}/{santaId}', name: 'remove_santa')]
     public function remove(SantaListRepository $santaListRepository, SantaRepository $santaRepository, SantasService $santasService, $id, $santaId): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('home');
+        }
         $activeList = $santaListRepository->findOneBy(['id' => $id]);
         $santaToRemove = $santaRepository->findOneBy(['id' => $santaId]);
         if( !$activeList || $activeList->getUserRelation() !== $this->getUser() || !$santaToRemove || $santaToRemove->getSantaListRelation() !== $activeList ) {
