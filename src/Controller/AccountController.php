@@ -85,4 +85,22 @@ class AccountController extends AbstractController
             'list' => $list,
         ]);
     }
+
+    #[Route('/compte/create-liste', name: 'create_list')]
+    public function createList(HandleRegisterForm $handleRegisterForm)
+    {
+        if(isset($_POST['submitCreateList'])){
+            $action = $handleRegisterForm->createList($_POST, $this->getUser());
+            if($action === true){
+                $this->addFlash('success', 'La liste a bien été créée');
+                return $this->redirectToRoute('account');
+            } else {
+                $this->addFlash('error', $action);
+            }
+        }
+
+        return $this->render('account/createList.html.twig', [
+
+        ]);
+    }
 }

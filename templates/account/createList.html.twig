@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{site_name}} - Compte utilisateur - Créer une liste{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="bg-light p-2">
+            <h2 class="text-center">Créer une liste</h2>
+            <p> 
+                Besoin d'une nouvelle liste? Alors remplissez ce formulaire pour la créer.
+            </p>
+        </div>
+        <form action="#" method="post">
+           <h3 class="text-center alert alert-info">Etape 1</h3>
+            <div class="mb-3 bg-light p-2">
+                <h2 class="text-center">Description de la liste</h2>
+                <p>
+                    Dites nous en plus sur votre liste. Choisissez un nom, vous pouvez ajouter une description et n'oubliez pas la date!!
+                </p>
+                {% include "partials/forms/_newListForm.html.twig" %}
+            </div>
+
+            <h3 class="text-center alert alert-info">Etape 2</h3>
+            <div class="mb-3 bg-light p-2">
+                <h2 class="text-center">Les participants</h2>
+                <p>
+                    La liste des participants est prête? Alors allez y ajouter les tous.</br>
+                    Pas de craintes si vous en oubliez, vous pourrez les rajouter plus tard sur votre compte.</br>
+                    On verra plus tard pour les contraintes. Et si vous voulez participer au tirage, n'oubliez pas de cocher la petite case :
+                </p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="userIsMember" name="userIsMember">
+                    <label class="form-check-label" for="userIsMember">Cochez la case si vous participez au tirage</label></br>
+                </div>
+                {% include "partials/forms/_newSantaForm.html.twig" %}
+            </div>
+
+            <div class="form-group mt-3 mb-3">
+            <button type="submit" 
+                    class="btn btn-primary form-control position-relative" 
+                    name="submitCreateList"
+                    
+            >   
+                Valider
+            </button>
+        </div>
+        </form>
+        <div class="mt-3">
+            <a href={{ path('account') }}>Annuler</a>
+        </div>
+    </div>
+
+{% endblock %}

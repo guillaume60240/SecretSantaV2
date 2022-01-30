@@ -1,0 +1,15 @@
+<div class="form-group">
+    <label for="eventName">Intitulé *</label>
+    <input type="text" class="form-control" id="eventName" name="eventName" placeholder="Intitulé de la liste">
+    <small id="eventNameHelpInline" class="text-muted">Entre 3 et 50 caractères</small>
+</div>
+<div class="form-group">
+    <label for="eventDescription">Description</label>
+    <textarea class="form-control" id="eventDescription" name="eventDescription" rows="5" placeholder="Description de la liste"></textarea>
+    <small id="eventDescriptionHelpInline" class="text-muted">Moins de 250 caractères</small>
+</div>
+<div class="form-group">
+    <label for="eventDate">Date de l'évènement *</label>
+    <input type="date" class="form-control" id="eventDate" name="eventDate" min="{{ "now" | date("Y-m-d") }}">
+    <small id="eventDateHelpInline" class="text-muted">Au format jj/mm/yyyy</small>
+</div>

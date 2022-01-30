@@ -3,6 +3,7 @@ let eventDescription = document.getElementById('eventDescription');
 let numberOfMembers = 1;
 let btnAdd = document.querySelector('.addMemberBtn');
 let submitBtnAddSanta = document.querySelector('button[name="submitAddSanta"]');
+let submitBtnCreateList = document.querySelector('button[name="submitCreateList"]');
 let submitBtnCreate = document.querySelector('button[name="createMember"]');
 
 
@@ -296,6 +297,73 @@ if(submitBtnAddSanta) {
         }
     })
 }
+
+//Validation des champs au submit createList
+if(submitBtnCreateList) {
+    submitBtnCreateList.addEventListener('click', function (e) {
+        let inputs = document.querySelectorAll('input');
+        let error = 0;
+        let inputInfo = null;
+        inputs.forEach(input => {
+            let validator = getValidator(input);
+            if (input.id === 'mail' || input.id === 'eventName' || input.id === 'eventDate') {
+                inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
+                validationInput(input, inputInfo, validator);
+            }  else if (input.name === 'memberName') {
+                inputInfo = document.querySelector('small[id="memberNameHelpInline"]');
+                validationInput(input, inputInfo, validator);
+            } else if(input.id === 'checkValidation') {
+                inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
+                if (input.checked) {
+                    trueInputIndication(input);
+                    trueinputInfoIndication(inputInfo);
+                    input.value = true;
+                }  else {
+                    falseInputIndication(input);
+                    falseinputInfoIndication(inputInfo);
+                    input.value = false;
+                }
+            } else if (input.id === 'userIsMember') {
+                if (input.checked) {
+                    input.value = true;
+                } else {
+                    input.value = false;
+                }
+            }
+
+            if (input.classList.contains('is-invalid')) {
+                error++;
+            }
+        });
+        //on vérifie le textArea
+        let eventDescription = document.querySelector('textarea[name="eventDescription"]');
+        let eventDescriptionInfo = document.querySelector('small[id="eventDescriptionHelpInline"]');
+        validTextArea(eventDescription, eventDescriptionInfo);
+        if (eventDescription.classList.contains('is-invalid')) {
+            error++;
+        }
+
+        //on compte les erreurs et on affiche le message d'erreur sinon on remplit l'input hidden pour les membres et on envoie le formulaire
+        if (error != 0) {
+            e.preventDefault();
+            let div = document.createElement('div');
+            div.classList.add('alert', 'alert-danger', 'error-submission-message');
+            div.innerHTML = 'Vous avez ' + error + ' erreur(s)';
+            body = document.querySelector('body');
+            submitBtnCreateList.appendChild(div);
+            
+            setTimeout(() => {
+                div.remove();
+            }, 3000);
+
+        } else {
+
+            let memberParticipation = document.querySelectorAll('input[name="memberName"]');
+            addMemberParticipation(memberParticipation);
+        }
+    })
+}
+
 
 //ajout des membres à la liste pour les récupérer dans la requête
 function addMemberParticipation(memberParticipation) {

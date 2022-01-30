@@ -191,4 +191,51 @@ class HandleRegisterForm
             }
         }
     }
+
+    public function createList($form, $user)
+    {
+        // dd($form);
+        if (!preg_match("/[.A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]{3,100}/i", $form['eventName'])) {
+            return 'Le nom de l\'événement n\'est pas valide';
+        } else {
+            $today = new \DateTime();
+            $eventDate = new \DateTime($form['eventDate']);
+            if ($eventDate < $today) {
+                return 'La date de l\'événement n\'est pas valide';
+            } else {
+                if (!empty($form['eventDescription']) && !preg_match("/[.A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]{3,300}/i", $form['eventDescription'])) {
+                    return 'La description de l\'événement n\'est pas valide';
+                } else {
+                    $santaListData = [
+                        'eventName' => htmlspecialchars($form['eventName']),
+                        'eventDate' => $eventDate,
+                        'eventDescription' => htmlspecialchars($form['eventDescription']),
+                    ];
+                    // appel du service create list
+                    $createdSantaList = $this->santaListService->createSantaList($santaListData, $user);
+                }
+            }
+            // dd($form['allMembersName']);
+            if (!empty($form['allMembersName'])) {
+                
+                $santasData = explode(',', $form['allMembersName']);
+                foreach($santasData as $santaData) {
+                    if (!preg_match("/[.A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]{3,100}/i", $santaData)) {
+                        return 'Le nom d\'un membre n\'est pas valide';
+                    }   
+                }
+                if(isset($form['userIsMember']) && $form['userIsMember'] == 'true') {
+                    
+                    array_push($santasData, htmlspecialchars($user->getFirstName().' '.$user->getLastName()));
+                } 
+                // dd($santasData);
+                $this->santasService->createSanta($santasData, $createdSantaList);
+            } else if (isset($form['userIsMember']) && $form['userIsMember'] == 'true'  && empty($form['allMembersName'])) {
+                $santasData = htmlspecialchars($user->getFirstName().' '.$user->getLastName());
+                $this->santasService->createSanta($santasData, $createdSantaList);
+            }
+
+            return true;
+        }
+    }
 }

@@ -41,12 +41,12 @@
                 
         </div>
         <div class="mt-5">
-            <a href="#" class="btn btn-success">Créer une nouvelle liste</a>
+            <a href={{ path('create_list') }} class="btn btn-success">Créer une nouvelle liste</a>
         </div>
     {% else %}
         <div class="container bg-light">
             <p>Vous n'avez pas encore de liste disponible</p>
-            <a href="#" >Créer une liste</a>
+            <a href={{ path('create_list') }} >Créer une liste</a>
         </div>
     {% endif %}
 </div>
