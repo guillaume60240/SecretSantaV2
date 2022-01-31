@@ -18,5 +18,6 @@ import './bootstrap';
 import './inputsValidation';
 import './btnBackToTop';
 import './updateSanta';
+import './constraintsManager';
 
 

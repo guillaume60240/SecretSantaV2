@@ -238,4 +238,27 @@ class HandleRegisterForm
             return true;
         }
     }
+
+    public function manageConstraints($form, $user, $list, $santa)
+    {
+        // dd($form, $user, $list, $santa);
+        unset($form['submitConstraints']);
+        foreach($form as $constraint) {
+            // dd($constraint);
+            if(!empty($constraint)){
+
+                $member = $this->santaRepository->findOneBy(['id' => intval($constraint)]);
+                if(!$member || $member->getSantaListRelation() != $list || $member->getUserRelation() != $user) {
+                    return 'Une erreur est survenue';
+                }
+                
+                $this->santasService->addConstraint($santa, $member);
+            }
+        }
+        if(empty($form)) {
+            $this->santasService->removeConstraints($santa);
+        }
+        // dd($form);
+        return true;
+    }
 }

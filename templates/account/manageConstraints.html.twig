@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{site_name}} - Compte utilisateur - Gérer les contraintes{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="bg-light p-2">
+            <h2 class="text-center">Ajouter des contraintes</h2>
+            <p> 
+                Si le Santa sélectionné n'a pas le droit d'offrir un cadeau à certains participants, vous pouvez le définir ici.</br>
+                Pour cela, il suffit de cocher la case correspondant au participant. Si la case est rouge il ne pourra pas lui offrir de cadeau et si elle est verte il pourra lui offrir un cadeau.
+            </p>
+        </div>
+        <h3 class="text-center mt-3"> {{ santa.firstName }} </h3>
+        <div class="mb-3 mt-3 bg-light p-2">
+            <form action="#" method="post">
+                <div class="row">
+                    
+                    {% for user in list.santas %}
+                        {% if user != santa %}
+                            {% if user in constraints %}
+                                <div class="col-12 col-md-4 col-xl-3">
+                                    <p class="alert alert-danger text-center userForConstraint" id="{{ user.id }}">
+                                        {{ user.firstName}}
+                                    </p>
+                                </div>
+                            {% else %}
+                                    <div class="col-12 col-md-4 col-xl-3">
+                                    <p class="alert alert-success text-center userForConstraint" id="{{ user.id }}">
+                                        {{ user.firstName}}
+                                    </p>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    
+                </div>
+                <div class="constraintsContainer">
+                   
+                </div>
+                <div class="form-group mt-3 mb-3">
+                    <button type="submit" 
+                            class="btn btn-primary form-control position-relative" 
+                            name="submitConstraints"
+                            
+                    >   
+                        Valider
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="container">
+            <a href={{ path('account_list_details', {'id' : list.id}) }}>Annuler</a>
+        </div>
+    </div>
+   
+{% endblock %}

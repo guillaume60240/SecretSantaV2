@@ -52,7 +52,7 @@
             </p>
             <div class="d-flex justify-content-around">
                 <a href={{ path('remove_santa', { 'id' : list.id, 'santaId' : santa.id }) }} class="text-danger">Supprimer</a>
-                <a href="#" class="text-info">Gérer les contraintes</a>
+                <a href={{ path('manage_constraints', {'listId' : list.id, 'santaId' : santa.id }) }} class="text-info">Gérer les contraintes</a>
             </div>
         </div>
         {% set key = key + 1 %}

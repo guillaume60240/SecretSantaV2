@@ -64,4 +64,26 @@ class SantasService {
 
         return true;
     }
+
+    public function addConstraint($santa, $constraint)
+    {
+        $this->removeConstraints($santa);
+        $santa->addCantGiveGift($constraint);
+        $this->entityManager->persist($santa);
+        $this->entityManager->flush();
+
+        return true;
+    }
+
+    public function removeConstraints($santa)
+    {
+        $constraints = $santa->getCantGiveGift();
+        foreach($constraints as $constraint) {
+            $santa->removeCantGiveGift($constraint);
+        }
+        
+        $this->entityManager->flush();
+
+        return true;
+    }
 }
