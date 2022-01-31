@@ -241,23 +241,36 @@ class HandleRegisterForm
 
     public function manageConstraints($form, $user, $list, $santa)
     {
-        // dd($form, $user, $list, $santa);
         unset($form['submitConstraints']);
-        foreach($form as $constraint) {
-            // dd($constraint);
-            if(!empty($constraint)){
-
-                $member = $this->santaRepository->findOneBy(['id' => intval($constraint)]);
-                if(!$member || $member->getSantaListRelation() != $list || $member->getUserRelation() != $user) {
-                    return 'Une erreur est survenue';
-                }
-                
-                $this->santasService->addConstraint($santa, $member);
-            }
-        }
+        // dd($form, $user, $list, $santa);
         if(empty($form)) {
             $this->santasService->removeConstraints($santa);
+        } else {
+
+            foreach($form as $constraint) {
+                // dd($constraint);
+                if(!empty($constraint)){
+                    
+                    $member = $this->santaRepository->findOneBy(['id' => intval($constraint)]);
+                    if(!$member || $member->getSantaListRelation() != $list || $member->getUserRelation() != $user) {
+                        return 'Une erreur est survenue';
+                    }
+                 
+                }
+            }
+            $this->santasService->removeConstraints($santa);
+            foreach($form as $constraint) {
+                // dd($constraint);
+                if(!empty($constraint)){
+                    
+                    $member = $this->santaRepository->findOneBy(['id' => intval($constraint)]);
+                    
+                    $this->santasService->addConstraint($santa, $member);
+                }
+            }
+            
         }
+        
         // dd($form);
         return true;
     }

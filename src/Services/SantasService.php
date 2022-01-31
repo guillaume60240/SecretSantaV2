@@ -67,7 +67,6 @@ class SantasService {
 
     public function addConstraint($santa, $constraint)
     {
-        $this->removeConstraints($santa);
         $santa->addCantGiveGift($constraint);
         $this->entityManager->persist($santa);
         $this->entityManager->flush();
