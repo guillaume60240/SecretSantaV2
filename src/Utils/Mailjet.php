@@ -7,8 +7,6 @@ use Mailjet\Resources;
 
 class Mailjet{
     
-    // private $api_key = '7db1903fc486fa9e3409135d0c98a699';
-    // private $api_key_secrete = '93d9763ffd47b2727f7041758d0920b9';
 
     public function sendListGenerationConfirm( $to_email, $to_name, $subject, $template, $list){
         $mj= new Client($_ENV['MAILJET_PUBLIC'], $_ENV['MAILJET_SECRET'],true,['version' => 'v3.1']);
