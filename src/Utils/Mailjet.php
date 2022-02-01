@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Utils;
-
+require 'vendor/autoload.php';
 use Mailjet\Client;
 use Mailjet\Resources;
 
-class Mail{
+class Mailjet{
     
     // private $api_key = '7db1903fc486fa9e3409135d0c98a699';
     // private $api_key_secrete = '93d9763ffd47b2727f7041758d0920b9';
