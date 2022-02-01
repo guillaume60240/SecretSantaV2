@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Repository\SantaListRepository;
 use App\Services\GenerateList;
+use App\Services\MailService;
 use App\Services\SantaListService;
+use App\Utils\Mail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,7 +28,7 @@ class GenerateListController extends AbstractController
     }
 
     #[Route('/generate/list/{listId}/generate', name: 'generate_list_generate')]
-    public function generate($listId, GenerateList $generateList, SantaListRepository $santaListRepository): Response
+    public function generate($listId, GenerateList $generateList, SantaListRepository $santaListRepository, MailService $mailService): Response
     {
         $activeList = $santaListRepository->findOneBy(['id' => $listId]);
         if(!$this->getUser() || $activeList->getUserRelation() !== $this->getUser()) {
@@ -35,6 +37,13 @@ class GenerateListController extends AbstractController
         $generation = $generateList->initialiseGeneration($activeList);
 
         if($generation === true) {
+            if($activeList->getSendNotificationForGeneratedList() == true) {
+                
+                $mailService->sendListGenerationConfirm($this->getUser(), $activeList);
+            }
+            if($activeList->getSendMailToSantas() == true) {
+                $mailService->sendSecretNameToSanta($this->getUser(), $activeList->getSantas(), $activeList);
+            }
             $this->addFlash('success', 'La liste a bien été générée');
             return $this->redirectToRoute('account');
         } else {

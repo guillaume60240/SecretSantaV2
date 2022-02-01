@@ -16,6 +16,9 @@ class AccountController extends AbstractController
     #[Route('/compte', name: 'account')]
     public function index(UserRepository $userRepository, UserService $userService): Response
     {   
+        // $api_key = $_ENV['MAILJET_PUBLIC'];
+        //  $api_key_secrete = $_ENV['MAILJET_SECRET'];
+        //  dd($api_key, $api_key_secrete);
         if(!$this->getUser()){
             return $this->redirectToRoute('home');
         }
