@@ -113,6 +113,7 @@ class GenerateList
             }
 
             //On va choisir une receveur
+            // dd($newSanta);
             $receiver = $this->findReceiver($this->datasForGeneration, $newSanta);
             if(!$receiver) {
                 return 'Il y a eu un problème dans la génération de la liste receiver.';
@@ -155,15 +156,17 @@ class GenerateList
         
         //si il y a plus de un santa possible on choisit un au hasard
         if($possibleSantas > 1) {
-            $newSanta = array_rand($possibleSantas);
+            // $newSanta = array_rand($possibleSantas);
+            $max = count($possibleSantas) - 1;
+            $key = rand(0, $max);
+            $newSanta = $possibleSantas[$key];
+            return $newSanta;
         } else {
-            $newSanta = $possibleSantas[0];
-        }
-        // dd($possibleSantas);
-        if(!$newSanta) {
             $newSanta = $allSantas[0];
+        
+            return $newSanta;
         }
-        return $newSanta;
+        // dd($possibleSantas, $newSanta);
     } 
 
     public function findReceiver($list, $activeSanta)
@@ -173,6 +176,7 @@ class GenerateList
         // dd($allReceivers, $activeSanta);
         foreach($allReceivers as $key => $receiver) {
             //on retire le santa actif et ceux qui ont déjà reçu un cadeau
+            // dd($receiver, $activeSanta);
             if($receiver['giver'] == $activeSanta['giver'] || $receiver['receiveFrom'] != false || $receiver['giver'] == $activeSanta['lastGiveGift']) {
                 unset($allReceivers[$key]);
             }
@@ -209,15 +213,16 @@ class GenerateList
         
         //si il y a plus de un receiver possible on choisit un au hasard
         if($possibleReceivers > 1) {
-            $receiver = array_rand($possibleReceivers);
+            // $receiver = array_rand($possibleReceivers);
+            $max = count($possibleReceivers) - 1;
+            $key = rand(0, $max);
+            $receiver = $possibleReceivers[$key];
+            return $receiver;
         } else {
-            $receiver = $possibleReceivers[0];
+            $receiver = $allReceivers[0];
+            return $receiver;
         }
 
-        if(!$receiver) {
-            $receiver = $allReceivers[0];
-        }
-        return $receiver;
     }
 
     public function assignSanta($datas, $newSanta, $receiver)
