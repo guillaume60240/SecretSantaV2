@@ -23,6 +23,9 @@ class SantaListService {
         $santaList->setDescription($santaListForm['eventDescription']);
         $santaList->setGenerated(false);
         $santaList->setUserRelation($user);
+        $santaList->setSendNotificationForSantaVisit(false);
+        $santaList->setSendNotificationForGeneratedList(false);
+        $santaList->setSendMailToSantas(true);
         $this->entityManager->persist($santaList);
         // dd($santaList);
         $this->entityManager->flush();

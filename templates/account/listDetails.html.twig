@@ -6,11 +6,20 @@
 
 <div class="container text-center">
     <h2>Détails de la liste </h2>
+    <p class="text-start">
+        <a href={{ path('account') }}>Retour</a>
+    </p>
     <div class="text-center border p-3 mb-3 bg-light">
         <h3>{{ list.name }}</h3>
         <p>{{ list.description }}</p>
         <p>Date :  {{ list.eventDate|date('d/m/Y') }}</p>
         <p>{{ list.santas|length }} participants</p>
+        
+        {% if list.sendNotificationForSantaVisit == true or list.sendMailToSantas == true or list.sendNotificationForGeneratedList == true %}
+            <p>Certaines notifications sont activées</p>
+        {% else %}
+            <p>Aucune notification n'est activée</p>
+        {% endif %}
         <div>
             <a href={{ path('list_update', {"id" : list.id}) }} class="btn btn-primary"><small>Modifier les détails</small></a>
             <a href={{ path('delete_list', {"id" : list.id}) }} class="btn btn-danger"><small>Supprimer la liste</small></a>
