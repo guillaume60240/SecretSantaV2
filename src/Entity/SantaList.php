@@ -33,6 +33,15 @@ class SantaList
     #[ORM\OneToMany(mappedBy: 'santaListRelation', targetEntity: Santa::class, orphanRemoval: true)]
     private $santas;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $sendMailToSantas;
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $sendNotificationForGeneratedList;
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $sendNotificationForSantaVisit;
+
     public function __construct()
     {
         $this->santas = new ArrayCollection();
@@ -129,6 +138,42 @@ class SantaList
                 $santa->setSantaListRelation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSendMailToSantas(): ?bool
+    {
+        return $this->sendMailToSantas;
+    }
+
+    public function setSendMailToSantas(?bool $sendMailToSantas): self
+    {
+        $this->sendMailToSantas = $sendMailToSantas;
+
+        return $this;
+    }
+
+    public function getSendNotificationForGeneratedList(): ?bool
+    {
+        return $this->sendNotificationForGeneratedList;
+    }
+
+    public function setSendNotificationForGeneratedList(?bool $sendNotificationForGeneratedList): self
+    {
+        $this->sendNotificationForGeneratedList = $sendNotificationForGeneratedList;
+
+        return $this;
+    }
+
+    public function getSendNotificationForSantaVisit(): ?bool
+    {
+        return $this->sendNotificationForSantaVisit;
+    }
+
+    public function setSendNotificationForSantaVisit(?bool $sendNotificationForSantaVisit): self
+    {
+        $this->sendNotificationForSantaVisit = $sendNotificationForSantaVisit;
 
         return $this;
     }

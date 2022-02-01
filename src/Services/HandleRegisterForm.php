@@ -178,10 +178,28 @@ class HandleRegisterForm
                 if (!empty($form['eventDescription']) && !preg_match("/[.A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]{3,300}/i", $form['eventDescription'])) {
                     return 'La description de l\'événement n\'est pas valide';
                 } else {
+                    if(isset($form['sendNotificationForSantaVisit']) && $form['sendNotificationForSantaVisit'] == 'on') {
+                        $sendNotificationForSantaVisit = true;
+                    } else {
+                        $sendNotificationForSantaVisit = false;
+                    }
+                    if(isset($form['sendNotificationForGeneratedList']) && $form['sendNotificationForGeneratedList'] == 'on') {
+                        $sendNotificationForGeneratedList = true;
+                    } else {
+                        $sendNotificationForGeneratedList = false;
+                    }
+                    if(isset($form['sendMailToSantas']) && $form['sendMailToSantas'] == 'on') {
+                        $sendMailToSanta = true;
+                    } else {
+                        $sendMailToSanta = false;
+                    }
                     $santaListData = [
                         'eventName' => htmlspecialchars($form['eventName']),
                         'eventDate' => $eventDate,
                         'eventDescription' => htmlspecialchars($form['eventDescription']),
+                        'sendNotificationForSantaVisit' => $sendNotificationForSantaVisit,
+                        'sendNotificationForGeneratedList' => $sendNotificationForGeneratedList,
+                        'sendMailToSanta' => $sendMailToSanta,
                     ];
                     // appel du service update list
                     $submission = $this->santaListService->updateList($santaListData, $list);
@@ -216,6 +234,7 @@ class HandleRegisterForm
                 }
             }
             // dd($form['allMembersName']);
+            $santasData = [];
             if (!empty($form['allMembersName'])) {
                 
                 $santasData = explode(',', $form['allMembersName']);
@@ -231,7 +250,7 @@ class HandleRegisterForm
                 // dd($santasData);
                 $this->santasService->createSanta($santasData, $createdSantaList);
             } else if (isset($form['userIsMember']) && $form['userIsMember'] == 'true'  && empty($form['allMembersName'])) {
-                $santasData = htmlspecialchars($user->getFirstName().' '.$user->getLastName());
+                array_push($santasData, htmlspecialchars($user->getFirstName().' '.$user->getLastName()));
                 $this->santasService->createSanta($santasData, $createdSantaList);
             }
 
