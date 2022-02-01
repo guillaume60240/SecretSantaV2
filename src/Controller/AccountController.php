@@ -130,4 +130,6 @@ class AccountController extends AbstractController
         $this->addFlash('success', 'La liste a bien été supprimée');
         return $this->redirectToRoute('account');
     }
+
+    
 }

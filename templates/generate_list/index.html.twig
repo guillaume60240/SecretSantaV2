@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ site_name }} - Générer une liste{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="bg-light p-2">
+        <h2 class="text-center">Génération de liste</h2>
+        <p> 
+            <h4 class="text-center">Vous vous apprétez à assigner un Santa à chaque membre</h4>
+            <span class="text-justify">
+                Tout est prêt? Vous avez ajouté tous les membres à la liste {{ activeList.name }}? Vous avez ajouté toutes les contraintes?</br>
+                Attention toutefois, une fois générée, vous ne pourrez plus ajouter de participant ni modifier les contraintes pour cet évènement.</br>
+                C'est tout bon pour vous?
+                Alors, cliquez sur le bouton ci-dessous pour générer la liste.
+            </span>
+        </p>
+        <p>
+            <h4 class="text-center">Récapitulatif</h4>
+            <ul>
+                <li>Nom de la liste: {{ activeList.name }}</li>
+                <li>Nombre de participants: {{ activeList.santas|length }}</li>
+                <li>Date de l'évènement: {{ activeList.eventDate | date('d/m/y') }}</li>
+            </ul>
+        </p>
+        {% if activeList.generated == true %}
+            <p class="alert alert-success text-center">Cette liste est générée</p>
+        {% else %}
+            <div>
+                <a href="{{ path('generate_list_generate', {'listId': activeList.id}) }}" class="btn btn-primary">Générer la liste</a>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

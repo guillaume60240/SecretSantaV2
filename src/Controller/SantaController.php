@@ -74,7 +74,7 @@ class SantaController extends AbstractController
         $constraints = $santaToManage->getCantGiveGift();
         $allConstraints[] = null;
         if($constraints){
-
+            
             foreach ($constraints as $constraint) {
                 $allConstraints[] = $constraint->getId();
             }
@@ -93,6 +93,7 @@ class SantaController extends AbstractController
         }
 
         $list = $santaListService->getSantaListWithSantas($activeList);
+        // dd($list, $allConstraints, $constraints);
         return $this->render('account/manageConstraints.html.twig', [
             'santa' => $santaToManage,
             'list' => $list,

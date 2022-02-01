@@ -8,9 +8,10 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class SantaListService {
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, SantasService $santasService)
     {
         $this->entityManager = $entityManager;
+        $this->santasService = $santasService;
     }
 
     public function createSantaList($santaListForm, $user)
@@ -53,7 +54,20 @@ class SantaListService {
 
     public function deleteList($list)
     {
+        foreach($list->getSantas() as $santa) {
+            $this->santasService->removeSanta($santa);
+        }
         $this->entityManager->remove($list);
+        $this->entityManager->flush();
+
+        return true;
+    }
+
+    public function updateSantaListAfterGeneration($list)
+    {
+        // dd($list);
+        $list->setGenerated(true);
+        $this->entityManager->persist($list);
         $this->entityManager->flush();
 
         return true;
