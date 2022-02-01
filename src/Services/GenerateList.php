@@ -155,13 +155,13 @@ class GenerateList
         
         //si il y a plus de un santa possible on choisit un au hasard
         if($possibleSantas > 1) {
-            $possibleSantas = $possibleSantas[array_rand($possibleSantas)];
+            $newSanta = array_rand($possibleSantas);
         } else {
-            $possibleSantas = $possibleSantas[0];
+            $newSanta = $possibleSantas[0];
         }
         // dd($possibleSantas);
 
-        return $possibleSantas;
+        return $newSanta;
     } 
 
     public function findReceiver($list, $activeSanta)
@@ -207,12 +207,12 @@ class GenerateList
         
         //si il y a plus de un receiver possible on choisit un au hasard
         if($possibleReceivers > 1) {
-            $possibleReceivers = $possibleReceivers[array_rand($possibleReceivers)];
+            $receiver = array_rand($possibleReceivers);
         } else {
-            $possibleReceivers = $possibleReceivers[0];
+            $receiver = $possibleReceivers[0];
         }
 
-        return $possibleReceivers;
+        return $receiver;
     }
 
     public function assignSanta($datas, $newSanta, $receiver)
