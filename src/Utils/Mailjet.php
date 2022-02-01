@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Utils;
-require 'vendor/autoload.php';
+
 use Mailjet\Client;
 use Mailjet\Resources;
 
