@@ -109,13 +109,13 @@ class GenerateList
         for ($i = 0; $i < $limit; $i++) {
             $newSanta = $this->findSanta($this->datasForGeneration);
             if(!$newSanta) {
-                return 'Il y a eu un problème dans la génération de la liste.';
+                return 'Il y a eu un problème dans la génération de la liste newSanta.';
             }
 
             //On va choisir une receveur
             $receiver = $this->findReceiver($this->datasForGeneration, $newSanta);
             if(!$receiver) {
-                return 'Il y a eu un problème dans la génération de la liste.';
+                return 'Il y a eu un problème dans la génération de la liste receiver.';
             }
 
             //on assigne le santa au receiver et inversement
@@ -160,7 +160,9 @@ class GenerateList
             $newSanta = $possibleSantas[0];
         }
         // dd($possibleSantas);
-
+        if(!$newSanta) {
+            $newSanta = $allSantas[0];
+        }
         return $newSanta;
     } 
 
@@ -212,6 +214,9 @@ class GenerateList
             $receiver = $possibleReceivers[0];
         }
 
+        if(!$receiver) {
+            $receiver = $allReceivers[0];
+        }
         return $receiver;
     }
 
