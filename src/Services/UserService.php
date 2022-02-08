@@ -16,7 +16,7 @@ class UserService
         $this->santaRepository = $santaRepository;
     }
 
-    public function createUser($createUserForm)
+    public function createUser(array $createUserForm) : User
     {
         $existedEmail = $this->verifyEmail($createUserForm['email']);
         if ($existedEmail) {
@@ -28,15 +28,13 @@ class UserService
         $newuser->setEmail($createUserForm['email']);
         $newuser->setPassword($createUserForm['password']);
         $this->entityManager->persist($newuser);
-        // dd($newuser);
         $this->entityManager->flush();
         return $newuser;
     }
 
-    public function verifyEmail($email)
+    public function verifyEmail(string $email) : bool
     {
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
-        // dd($user);
         if ($user) {
             return true;
         } else {
@@ -44,7 +42,7 @@ class UserService
         }
     }
 
-    public function getUserWithListsAndSantas($user)
+    public function getUserWithListsAndSantas(User $user) : User
     {
         $lists = $this->santaListRepository->findBy(['userRelation' => $user]);
         foreach ($lists as $list) {
@@ -54,7 +52,6 @@ class UserService
             }
             $user->addSantaList($list);
         }
-
         return $user;
     }
 }

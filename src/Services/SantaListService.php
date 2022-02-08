@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Entity\Santa;
 use App\Entity\SantaList;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 class SantaListService {
@@ -14,7 +15,7 @@ class SantaListService {
         $this->santasService = $santasService;
     }
 
-    public function createSantaList($santaListForm, $user)
+    public function createSantaList(array $santaListForm, User $user) : SantaList
     {
         // dd($santaListForm);
         $santaList = new SantaList();
@@ -34,7 +35,7 @@ class SantaListService {
         
     }
 
-    public function getSantaListWithSantas($santaList)
+    public function getSantaListWithSantas(SantaList $santaList) : SantaList
     {
         $santas = $this->entityManager->getRepository(Santa::class)->findBy(['santaListRelation' => $santaList]);
         foreach ($santas as $santa) {
@@ -44,7 +45,7 @@ class SantaListService {
         return $santaList;
     }
 
-    public function updateList($form, $list)
+    public function updateList(array $form, SantaList $list) : bool
     {
         // dd($form);
         $list->setName($form['eventName']);
@@ -60,10 +61,17 @@ class SantaListService {
         return true;
     }
 
-    public function deleteList($list)
+    public function deleteList(SantaList $list) : bool
     {
         foreach($list->getSantas() as $santa) {
-            $this->santasService->removeSanta($santa);
+            if($santa->getCantGiveGift()) {
+                $this->santasService->removeConstraints($santa);
+            }
+            $santa->setGiveGift(null);
+            $this->entityManager->flush();
+        }
+        foreach($list->getSantas() as $santa) {
+            $this->entityManager->remove($santa);
         }
         $this->entityManager->remove($list);
         $this->entityManager->flush();
@@ -71,7 +79,7 @@ class SantaListService {
         return true;
     }
 
-    public function updateSantaListAfterGeneration($list)
+    public function updateSantaListAfterGeneration(SantaList $list) : bool
     {
         // dd($list);
         $list->setGenerated(true);

@@ -22,11 +22,7 @@
         {% endif %}
         <div>
             <a href={{ path('list_update', {"id" : list.id}) }} class="btn btn-primary"><small>Modifier les détails</small></a>
-            {% if list.generated == true %}
-                <a href="#" class="btn btn-danger"><small>Supprimer la liste (en cours)</small></a>
-            {% else %}
-                <a href={{ path('delete_list', {"id" : list.id}) }} class="btn btn-danger"><small>Supprimer la liste</small></a>
-            {% endif %}
+            <a href={{ path('delete_list', {"id" : list.id}) }} class="btn btn-danger"><small>Supprimer la liste</small></a>
         </div>
         {% if list.generated == true %}
             <p class="alert alert-success text-center mt-3">Cette liste est générée</p>

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Entity\Santa;
+use App\Entity\SantaList;
 use App\Repository\SantaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -13,9 +14,9 @@ class SantasService {
         $this->santaRepository = $santaRepository;
     }
 
-    public function createSanta($santaForm, $santaList)
+    // crée un nouveau santa 
+    public function createSanta(array $santaForm, SantaList $santaList) : void
     {
-        // dd($santaForm, $santaList);
         foreach($santaForm as $santa) {
             $newSanta = new Santa();
             $token = $this->generateToken($santa, $santaList);
@@ -28,43 +29,29 @@ class SantasService {
             $this->entityManager->persist($newSanta);
 
             $this->entityManager->flush();
-
         }
     }
 
-    public function generateToken($santa, $santaList)
+    // génère un token pour chaque santa pour le lien de récupération de la relation
+    public function generateToken(string $santa, SantaList $santaList) : string
     {
         $token = hash('sha256', $santa . $santaList->getName());
-        // dd($token);
         return $token;
     }
    
-    public function removeSanta($santa)
+    // supprime un santa après avoir supprimer la relation s'il a un santa ou s'il est le santa d'un autre membre
+    public function removeSanta(Santa $santa) : bool
     {
-        if($santa->getCantGiveGift()) {
-            foreach($santa->getCantGiveGift() as $cantGiveGift) {
-                $santa->removeCantGiveGift($cantGiveGift);
-            }
-            $this->entityManager->flush();
-        }
-        if($santa->getCantReceiveFrom()) {
-            foreach($santa->getCantReceiveFrom() as $cantReceiveFrom) {
-                $santa->removeCantReceiveFrom($cantReceiveFrom);
-            }
-            $this->entityManager->flush();
-        }
+        $this->deleteReceiver($santa);
         $santa->setGiveGift(null);
-        $this->entityManager->flush();
-
-        $this->removeConstraints($santa);
-        // dd($santa);
         $this->entityManager->remove($santa);
         $this->entityManager->flush();
 
         return true;
     }
 
-    public function updateSantaName($updatedSanta, $santaName)
+    // permet de modifier le nom du Santa
+    public function updateSantaName(Santa $updatedSanta, string $santaName) : bool
     {
         $updatedSanta->setFirstName($santaName);
         $this->entityManager->persist($updatedSanta);
@@ -73,7 +60,8 @@ class SantasService {
         return true;
     }
 
-    public function updateSantaMail($updatedSanta, $santaMail)
+    // permet de modifier le mail du Santa
+    public function updateSantaMail(Santa $updatedSanta, string $santaMail) : bool
     {
         $updatedSanta->setEmail($santaMail);
         $this->entityManager->persist($updatedSanta);
@@ -82,7 +70,8 @@ class SantasService {
         return true;
     }
 
-    public function addConstraint($santa, $constraint)
+    // permet d'ajouter des contraintes au Santa
+    public function addConstraint(Santa $santa, Santa $constraint) : bool
     {
         $santa->addCantGiveGift($constraint);
         $this->entityManager->persist($santa);
@@ -91,11 +80,10 @@ class SantasService {
         return true;
     }
 
-    public function removeConstraints($santa)
+    //permet de retirer toutes les contraintes du Santa
+    public function removeConstraints(Santa $santa) : bool
     {
-        // dd($santa);
         $constraints = $santa->getCantGiveGift();
-        // dd($constraints);
         foreach($constraints as $constraint) {
             $santa->removeCantGiveGift($constraint);
         }
@@ -105,7 +93,23 @@ class SantasService {
         return true;
     }
 
-    public function getSantaWithCantGiveGift($santa)
+    // permet de supprimer le Santa d'un autre membre
+    public function deleteReceiver(Santa $santa) : bool
+    {
+        $list = $santa->getSantaListRelation();
+        foreach($list->getSantas() as $giver) {
+            if($giver->getGiveGift() == $santa) {
+            $giver->setGiveGift(null);
+            }
+
+            $this->entityManager->persist($giver);
+            $this->entityManager->flush();
+        }
+
+        return true;
+    }
+
+    public function getSantaWithCantGiveGift(Santa $santa) : Santa
     {
         $constraints = $santa->getCantGiveGift();
         // dd($santa, $constraints);
@@ -113,11 +117,11 @@ class SantasService {
         return $santa;
     }
 
-    public function updateSantastAfterGeneration($datas)
+    // permet de créer la relation santa receiver
+    public function updateSantastAfterGeneration(array $datas) : bool
     {
         foreach($datas as $data) {
             $santa = $this->santaRepository->findOneBy(['id' => $data['giver']->getId()]);
-            
             if($santa) {
 
                 $receiver = $this->santaRepository->findOneBy(['id' => $data['newGiveGift']->getId()]);
@@ -133,6 +137,5 @@ class SantasService {
         }
         $this->entityManager->flush();
         return true;
-        // dd($datas);
     }
 }

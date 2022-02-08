@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entity\SantaList;
 use App\Repository\SantaListRepository;
 use App\Repository\SantaRepository;
 
@@ -16,7 +17,7 @@ class GenerateList
         $this->boucle = 1;
     }
     
-    public function initialiseGeneration($activeList)
+    public function initialiseGeneration(SantaList $activeList)
     {
        
         $santas = $this->santaRepository->findBy(['santaListRelation' => $activeList]);
@@ -70,7 +71,7 @@ class GenerateList
         }
     }
 
-    public function getDatasForGeneration($list)
+    public function getDatasForGeneration(SantaList $list) : mixed 
     {
         $datas = [];
         foreach($list->getSantas() as $santa) {
@@ -101,7 +102,7 @@ class GenerateList
         // dd($list->getSantas(), $datas);
     }
 
-    public function listGeneration($list)
+    public function listGeneration(array $list) : mixed
     {
         $limit = count($list);
 
@@ -113,7 +114,6 @@ class GenerateList
             }
 
             //On va choisir une receveur
-            // dd($newSanta);
             $receiver = $this->findReceiver($this->datasForGeneration, $newSanta);
             if(!$receiver) {
                 return 'Il y a eu un problème dans la génération de la liste receiver.';
@@ -124,11 +124,9 @@ class GenerateList
         }
         //on return true pour iondiquer que la génération est terminée
         return true;
-        // return $this->datasForGeneration;
-        // dd($this->datasForGeneration);
     }
     
-    public function findSanta($list)
+    public function findSanta(array $list) : mixed
     {
         //on créela list de santas
         $allSantas = $list;
@@ -141,10 +139,7 @@ class GenerateList
         }
         //on classe par ordre de priorité de santa
         array_multisort(array_column($allSantas, 'santaPriority'), SORT_DESC, $allSantas);
-        // if($this->boucle == 2){
-
-        //     dd($allSantas);
-        // }
+        
         $possibleSantas = [];
         foreach($allSantas as $santa) {
             
@@ -153,12 +148,16 @@ class GenerateList
                 }
             
         }
+
+        if(count($possibleSantas) == 0) {
+            return false;
+        }
         
         //si il y a plus de un santa possible on choisit un au hasard
-        if($possibleSantas > 1) {
-            // $newSanta = array_rand($possibleSantas);
+        if(count($possibleSantas) > 1) {
             $max = count($possibleSantas) - 1;
             $key = rand(0, $max);
+            
             $newSanta = $possibleSantas[$key];
             return $newSanta;
         } else {
@@ -166,17 +165,14 @@ class GenerateList
         
             return $newSanta;
         }
-        // dd($possibleSantas, $newSanta);
     } 
 
-    public function findReceiver($list, $activeSanta)
+    public function findReceiver(array $list, array $activeSanta) : mixed
     {
         //on commence par supprimer tous ceux qui ne peuvent pas recevoir de cadeau de la part du santa
         $allReceivers = $list;
-        // dd($allReceivers, $activeSanta);
         foreach($allReceivers as $key => $receiver) {
             //on retire le santa actif et ceux qui ont déjà reçu un cadeau
-            // dd($receiver, $activeSanta);
             if($receiver['giver'] == $activeSanta['giver'] || $receiver['receiveFrom'] != false || $receiver['giver'] == $activeSanta['lastGiveGift']) {
                 unset($allReceivers[$key]);
             }
@@ -188,7 +184,6 @@ class GenerateList
         }
         //on classe par ordre de priorité de receiver
         array_multisort(array_column($allReceivers, 'receivePriority'), SORT_DESC, $allReceivers);
-        // dd($allReceivers);
 
         $possibleReceivers = [];
 
@@ -199,33 +194,30 @@ class GenerateList
         }
 
         //s'il ny a pas de receiver possible on réinitialise les données et on ajoute +1 au receiverPriority et au santaPriority pour ceux qui n'ont pas donné de cadeau
-        if(!$possibleReceivers) {
+        if(count($possibleReceivers) == 0) {
             $this->datasForGeneration = $this->resetDatasAndIncrementeReceiverPriority($this->datasForGeneration);
             //on increment la boucle
             $this->boucle ++;
-            if($this->boucle == 20) {
+            //on limite le nombre de boucles au nombre de participants
+            if($this->boucle == count($this->datasForGeneration)) {
                 return false;
-                // dd($this->datasForGeneration);
             }
             //et on relance la génération
             $this->listGeneration($this->datasForGeneration);
-        }
-        
-        //si il y a plus de un receiver possible on choisit un au hasard
-        if($possibleReceivers > 1) {
-            // $receiver = array_rand($possibleReceivers);
+        } else {
+
+            //si il y a plus de un receiver possible on choisit un au hasard
+            
             $max = count($possibleReceivers) - 1;
             $key = rand(0, $max);
             $receiver = $possibleReceivers[$key];
-            return $receiver;
-        } else {
-            $receiver = $allReceivers[0];
-            return $receiver;
         }
+        
+        return $receiver;
 
     }
 
-    public function assignSanta($datas, $newSanta, $receiver)
+    public function assignSanta(array $datas, array $newSanta, array $receiver) : array
     {
         foreach($datas as $key => $data) {
             if($data['giver'] == $newSanta['giver']) {
@@ -240,11 +232,8 @@ class GenerateList
         return $datas;
     }
 
-    public function resetDatasAndIncrementeReceiverPriority($datas)
+    public function resetDatasAndIncrementeReceiverPriority(array $datas) : array
     {
-        // if($this->boucle == 19) {
-        //     dd($this->datasForGeneration);
-        // }
         foreach($datas as $key => $data) {
             if($data['receiveFrom'] == false) {
                 $datas[$key]['receivePriority'] ++;
@@ -256,7 +245,7 @@ class GenerateList
             $datas[$key]['santa'] = false;
             $datas[$key]['newGiveGift'] = null;
         }
-        // dd($datas);
+
         return $datas;
     }
     
