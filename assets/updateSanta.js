@@ -11,7 +11,6 @@ if(updateSantaNameBtn) {
         btn.addEventListener('click', (e) => {
 
             let activeName = document.querySelector('#firstName-' + btn.id);
-            console.log(activeName);
             
             let nameForm = new Form('form-group, w-75', '#', 'post', activeName, 'updateSantaName'+btn.id);
                 nameForm.createForm();
@@ -50,9 +49,7 @@ if(updateSantaNameBtn) {
 if(updateSantaMailBtn) {
     updateSantaMailBtn.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            console.log(btn);
             let activeMail = document.querySelector('#email-' + btn.id);
-            console.log(activeMail);
             
             let mailForm = new Form('form-group, w-75', '#', 'post', activeMail, 'updateSantaMail'+btn.id);
                 mailForm.createForm();

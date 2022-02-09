@@ -165,18 +165,17 @@ function dateVerify(input, inputInfo) {
 
 //Ajout de noms de membres
 if(btnAdd){
-
     btnAdd.addEventListener('click', function (e) {
-        console.log('add');
         let key = numberOfMembers;
         let div = document.createElement('div');
-        div.classList.add('form-group');
+            div.classList.add('form-group');
         let input = document.createElement('input');
-        input.classList.add('form-control');
-        input.classList.add('mt-2');
-        input.name = 'memberName';
-        input.placeholder = 'Nom, prénom ou pseudo';
-        input.id = `memberName${key}`;
+            input.classList.add('form-control');
+            input.classList.add('mt-2');
+            input.name = 'memberName';
+            input.placeholder = 'Nom, prénom ou pseudo';
+            input.id = `memberName${key}`;
+
         div.appendChild(input);
         btnAdd.parentNode.insertBefore(div, btnAdd);
         
@@ -190,44 +189,10 @@ if(submitBtnCreate) {
     submitBtnCreate.addEventListener('click', function (e) {
         let inputs = document.querySelectorAll('input');
         let error = 0;
-        let inputInfo = null;
 
         //on vérifie que tous les inputs sont valides
         inputs.forEach(input => {
-        let validator = getValidator(input);
-            if (input.id === 'mail' || input.id === 'password' || input.id === 'eventName' || input.id === 'eventDate' || input.id === 'firstName' || input.id === 'lastName') {
-                inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
-                validationInput(input, inputInfo, validator);
-            } else if (input.id === 'repeatPassword') {
-                inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
-                let password = document.querySelector('input[name="password"]');
-                if (input.value === password.value && password.classList.contains('is-valid')) {
-                    trueInputIndication(input);
-                } else {
-                    falseInputIndication(input);
-                    falseinputInfoIndication(inputInfo);
-                }
-            } else if (input.name === 'memberName') {
-                inputInfo = document.querySelector('small[id="memberNameHelpInline"]');
-                validationInput(input, inputInfo, validator);
-            } else if(input.id === 'checkValidation') {
-                inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
-                if (input.checked) {
-                    trueInputIndication(input);
-                    trueinputInfoIndication(inputInfo);
-                    input.value = true;
-                }  else {
-                    falseInputIndication(input);
-                    falseinputInfoIndication(inputInfo);
-                    input.value = false;
-                }
-            } else if (input.id === 'userIsMember') {
-                if (input.checked) {
-                    input.value = true;
-                } else {
-                    input.value = false;
-                }
-            }
+            initValidation(input);
 
             if (input.classList.contains('is-invalid')) {
                 error++;
@@ -244,15 +209,7 @@ if(submitBtnCreate) {
         //on compte les erreurs et on affiche le message d'erreur sinon on remplit l'input hidden pour les membres et on envoie le formulaire
         if (error != 0) {
             e.preventDefault();
-            let div = document.createElement('div');
-            div.classList.add('alert', 'alert-danger', 'error-submission-message');
-            div.innerHTML = 'Vous avez ' + error + ' erreur(s)';
-            body = document.querySelector('body');
-            submitBtnCreate.appendChild(div);
-
-            setTimeout(() => {
-                div.remove();
-            }, 3000);
+            createDivError(submitBtnCreate, error);
 
         } else {
 
@@ -267,28 +224,16 @@ if(submitBtnAddSanta) {
     submitBtnAddSanta.addEventListener('click', function (e) {
         let inputs = document.querySelectorAll('input');
         let error = 0;
-        let inputInfo = null;
         inputs.forEach(input => {
-            let validator = getValidator(input);
-            if (input.name === 'memberName') {
-                inputInfo = document.querySelector('small[id="memberNameHelpInline"]');
-                validationInput(input, inputInfo, validator);
-            }
+            initValidation(input);
+            
             if (input.classList.contains('is-invalid')) {
                 error++;
             }
         })
         if (error != 0) {
             e.preventDefault();
-            let div = document.createElement('div');
-            div.classList.add('alert', 'alert-danger', 'error-submission-message');
-            div.innerHTML = 'Vous avez ' + error + ' erreur(s)';
-            body = document.querySelector('body');
-            submitBtnAddSanta.appendChild(div);
-
-            setTimeout(() => {
-                div.remove();
-            }, 3000);
+            createDivError(submitBtnAddSanta, error);
 
         } else {
 
@@ -303,33 +248,8 @@ if(submitBtnCreateList) {
     submitBtnCreateList.addEventListener('click', function (e) {
         let inputs = document.querySelectorAll('input');
         let error = 0;
-        let inputInfo = null;
         inputs.forEach(input => {
-            let validator = getValidator(input);
-            if (input.id === 'mail' || input.id === 'eventName' || input.id === 'eventDate') {
-                inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
-                validationInput(input, inputInfo, validator);
-            }  else if (input.name === 'memberName') {
-                inputInfo = document.querySelector('small[id="memberNameHelpInline"]');
-                validationInput(input, inputInfo, validator);
-            } else if(input.id === 'checkValidation') {
-                inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
-                if (input.checked) {
-                    trueInputIndication(input);
-                    trueinputInfoIndication(inputInfo);
-                    input.value = true;
-                }  else {
-                    falseInputIndication(input);
-                    falseinputInfoIndication(inputInfo);
-                    input.value = false;
-                }
-            } else if (input.id === 'userIsMember') {
-                if (input.checked) {
-                    input.value = true;
-                } else {
-                    input.value = false;
-                }
-            }
+            initValidation(input);
 
             if (input.classList.contains('is-invalid')) {
                 error++;
@@ -346,15 +266,7 @@ if(submitBtnCreateList) {
         //on compte les erreurs et on affiche le message d'erreur sinon on remplit l'input hidden pour les membres et on envoie le formulaire
         if (error != 0) {
             e.preventDefault();
-            let div = document.createElement('div');
-            div.classList.add('alert', 'alert-danger', 'error-submission-message');
-            div.innerHTML = 'Vous avez ' + error + ' erreur(s)';
-            body = document.querySelector('body');
-            submitBtnCreateList.appendChild(div);
-            
-            setTimeout(() => {
-                div.remove();
-            }, 3000);
+            createDivError( submitBtnCreateList ,error);
 
         } else {
 
@@ -364,6 +276,54 @@ if(submitBtnCreateList) {
     })
 }
 
+function initValidation(input) {
+    let inputInfo = null;
+    let validator = getValidator(input);
+    if (input.id === 'mail' || input.id === 'password' || input.id === 'eventName' || input.id === 'eventDate' || input.id === 'firstName' || input.id === 'lastName') {
+        inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
+        validationInput(input, inputInfo, validator);
+    } else if (input.id === 'repeatPassword') {
+        inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
+        let password = document.querySelector('input[name="password"]');
+        if (input.value === password.value && password.classList.contains('is-valid')) {
+            trueInputIndication(input);
+        } else {
+            falseInputIndication(input);
+            falseinputInfoIndication(inputInfo);
+        }
+    } else if (input.name === 'memberName') {
+        inputInfo = document.querySelector('small[id="memberNameHelpInline"]');
+        validationInput(input, inputInfo, validator);
+    } else if(input.id === 'checkValidation') {
+        inputInfo = document.querySelector(`small[id="${input.id}HelpInline"]`)
+        if (input.checked) {
+            trueInputIndication(input);
+            trueinputInfoIndication(inputInfo);
+            input.value = true;
+        }  else {
+            falseInputIndication(input);
+            falseinputInfoIndication(inputInfo);
+            input.value = false;
+        }
+    } else if (input.id === 'userIsMember') {
+        if (input.checked) {
+            input.value = true;
+        } else {
+            input.value = false;
+        }
+    }
+}
+//affiche le nombre d'erreurs dans le message d'erreur
+function createDivError(parent, error) {
+    let div = document.createElement('div');
+        div.classList.add('alert', 'alert-danger', 'error-submission-message');
+        div.innerHTML = 'Vous avez ' + error + ' erreur(s)';
+
+    parent.appendChild(div);
+    setTimeout(() => {
+        div.remove();
+    }, 3000);
+}
 
 //ajout des membres à la liste pour les récupérer dans la requête
 function addMemberParticipation(memberParticipation) {
@@ -375,8 +335,6 @@ function addMemberParticipation(memberParticipation) {
     });
     let allMembersName = document.querySelector('input[name="allMembersName"]');
     
-    allMembersName.value = allMembers;
-    
-    console.log(allMembers);
+    allMembersName.value = allMembers;    
 }
 
