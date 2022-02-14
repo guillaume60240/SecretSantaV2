@@ -88,8 +88,6 @@ class HandleRegisterForm
                 $santasData = htmlspecialchars($registerForm['firstName']).' '.htmlspecialchars($registerForm['lastName']);
                 $this->santasService->createSanta($santasData, $createdSantaList);
             }
-            // appel du service createSanta
-            // dd($registerForm, $userData, $santaListData, $santasData);
             return true;
         }
     }
@@ -114,7 +112,6 @@ class HandleRegisterForm
     public function updateSantaName($santaForm, $santaList, $user)
     {
         if (!empty($santaForm['updateSantaName'])) {
-            // dd($santaForm);
             $updatedSanta = $this->santaRepository->findOneBy(['id' => $santaForm['updateSantaName']]);
             if(!$updatedSanta){
                 return 'Une erreur est survenue';

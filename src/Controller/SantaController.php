@@ -14,86 +14,92 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SantaController extends AbstractController
 {
-    #[Route('/santa/{id}', name: 'add_santa')]
-    public function add(SantaListRepository $santaListRepository, Request $request, HandleRegisterForm $form, $id): Response
+    public function __construct(SantaListRepository $santaListRepository, SantaRepository $santaRepository, SantasService $santasService, SantaListService $santaListService, HandleRegisterForm $handleRegisterForm)
     {
-        if(!$this->getUser()){
-            return $this->redirectToRoute('home');
-        }
-        $activeList = $santaListRepository->findOneBy(['id' => $id]);
+        $this->santaListRepository = $santaListRepository;
+        $this->santaRepository = $santaRepository;
+        $this->santasService = $santasService;
+        $this->santaListService = $santaListService;
+        $this->handleRegisterForm = $handleRegisterForm;
+    }
+    
+    #[Route('/santa/{id}', name: 'add_santa')]
+    public function add(int $id, Request $request): Response
+    {
+        $activeList = $this->santaListRepository->findOneBy(['id' => $id]);
         if( !$activeList || $activeList->getUserRelation() !== $this->getUser() ) {
             return $this->redirectToRoute('account');
         }
-        if(isset($_POST['submitAddSanta'])){
-            $submission = $form->addSanta($request->request->all(), $activeList);
-            // dd($request->request->all());
-            if ($submission === true) {
-                $this->addFlash('success', 'Votre santa a bien été ajouté');
-                return $this->redirectToRoute('account_list_details', ['id' => $id]);
-            } else {
-                $this->addFlash('error', $submission);
+
+        if($request->isMethod('POST')) {
+            $form = $request->request->all();
+            if(isset($form['submitAddSanta'])){
+                $submission = $this->handleRegisterForm->addSanta($form, $activeList);
+                if ($submission === true) {
+                    $this->addFlash('success', 'Votre santa a bien été ajouté');
+                    return $this->redirectToRoute('account_list_details', ['id' => $id]);
+                } else {
+                    $this->addFlash('error', $submission);
+                }
             }
-            
         }
+
         return $this->render('santa/index.html.twig', [
         ]);
     }
 
     #[Route('/santa/{id}/{santaId}', name: 'remove_santa')]
-    public function remove(SantaListRepository $santaListRepository, SantaRepository $santaRepository, SantasService $santasService, $id, $santaId): Response
+    public function remove(int $id, int $santaId): Response
     {
-        if(!$this->getUser()){
-            return $this->redirectToRoute('home');
-        }
-        $activeList = $santaListRepository->findOneBy(['id' => $id]);
-        $santaToRemove = $santaRepository->findOneBy(['id' => $santaId]);
+        $activeList = $this->santaListRepository->findOneBy(['id' => $id]);
+        $santaToRemove = $this->santaRepository->findOneBy(['id' => $santaId]);
         if( !$activeList || $activeList->getUserRelation() !== $this->getUser() || !$santaToRemove || $santaToRemove->getSantaListRelation() !== $activeList ) {
             return $this->redirectToRoute('account');
         }
-        $action = $santasService->removeSanta($santaToRemove);
+
+        $action = $this->santasService->removeSanta($santaToRemove);
         if ($action === true) {
             $this->addFlash('success', 'Votre santa a bien été supprimé');
-            return $this->redirectToRoute('account_list_details', ['id' => $id]);
         } else {
             $this->addFlash('error', "Une erreur est survenue lors de la suppression de votre santa");
-            return $this->redirectToRoute('account_list_details', ['id' => $id]);
         }
+
+        return $this->redirectToRoute('account_list_details', ['id' => $id]);
     }
 
     #[Route('/santa/{listId}/{santaId}/manage-constraints', name: 'manage_constraints')]
-    public function manageConstraints($listId, $santaId, SantaListRepository $santaListRepository, SantaRepository $santaRepository, SantaListService $santaListService, Request $request, HandleRegisterForm $handleRegisterForm): Response
+    public function manageConstraints(int $listId, int $santaId, Request $request): Response
     {
-        if(!$this->getUser()){
-            return $this->redirectToRoute('home');
-        }
-        $activeList = $santaListRepository->findOneBy(['id' => $listId]);
-        $santaToManage = $santaRepository->findOneBy(['id' => $santaId]);
+        $activeList = $this->santaListRepository->findOneBy(['id' => $listId]);
+        $santaToManage = $this->santaRepository->findOneBy(['id' => $santaId]);
         if( !$activeList || $activeList->getUserRelation() !== $this->getUser() || !$santaToManage || $santaToManage->getSantaListRelation() !== $activeList ) {
             return $this->redirectToRoute('account');
         }
+        $list = $this->santaListService->getSantaListWithSantas($activeList);
+
         $constraints = $santaToManage->getCantGiveGift();
         $allConstraints[] = null;
         if($constraints){
-            
             foreach ($constraints as $constraint) {
                 $allConstraints[] = $constraint->getId();
             }
         } else {
             $allConstraints = null;
         }
-        if(isset($_POST['submitConstraints'])){
-            // dd($request->request->all());
-            $action = $handleRegisterForm->manageConstraints($request->request->all(), $this->getUser(), $activeList, $santaToManage);
-            if ($action === true) {
-                $this->addFlash('success', 'Vos contraintes ont bien été modifiées');
-                return $this->redirectToRoute('account_list_details', ['id' => $listId]);
-            } else {
-                $this->addFlash('error', $action);
+
+        if($request->isMethod('POST')) {
+            $form = $request->request->all();
+            if(isset($form['submitConstraints'])){
+                $submission = $this->handleRegisterForm->manageConstraints($form, $this->getUser(), $activeList, $santaToManage);
+                if ($submission === true) {
+                    $this->addFlash('success', 'Vos contraintes ont bien été modifiées');
+                    return $this->redirectToRoute('account_list_details', ['id' => $listId]);
+                } else {
+                    $this->addFlash('error', $submission);
+                }
             }
         }
-
-        $list = $santaListService->getSantaListWithSantas($activeList);
-        // dd($list, $allConstraints, $constraints);
+        
         return $this->render('account/manageConstraints.html.twig', [
             'santa' => $santaToManage,
             'list' => $list,

@@ -6,21 +6,28 @@ use App\Repository\SantaListRepository;
 use App\Services\GenerateList;
 use App\Services\MailService;
 use App\Services\SantaListService;
-use App\Utils\Mail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class GenerateListController extends AbstractController
 {
-    #[Route('/generate/list/{listId}', name: 'generate_list')]
-    public function index($listId, SantaListRepository $santaListRepository, SantaListService $santaListService): Response
+    public function __construct(SantaListService $santaListService, GenerateList $generateList, SantaListRepository $santaListRepository, MailService $mailService)
     {
-        $activeList = $santaListRepository->findOneBy(['id' => $listId]);
-        if(!$this->getUser() || $activeList->getUserRelation() !== $this->getUser()) {
+        $this->santaListService = $santaListService;
+        $this->generateList = $generateList;
+        $this->santaListRepository = $santaListRepository;
+        $this->mailService = $mailService;
+    }
+    
+    #[Route('/generate/list/{listId}', name: 'generate_list')]
+    public function index(int $listId): Response
+    {
+        $activeList = $this->santaListRepository->findOneBy(['id' => $listId]);
+        if(!$activeList || $activeList->getUserRelation() !== $this->getUser()) {
             return $this->redirectToRoute('home');
         }
-        $activeList = $santaListService->getSantaListWithSantas($activeList);
+        $activeList = $this->santaListService->getSantaListWithSantas($activeList);
 
         return $this->render('generate_list/index.html.twig', [
             'activeList' => $activeList
@@ -28,21 +35,21 @@ class GenerateListController extends AbstractController
     }
 
     #[Route('/generate/list/{listId}/generate', name: 'generate_list_generate')]
-    public function generate($listId, GenerateList $generateList, SantaListRepository $santaListRepository, MailService $mailService): Response
+    public function generate(int $listId): Response
     {
-        $activeList = $santaListRepository->findOneBy(['id' => $listId]);
-        if(!$this->getUser() || $activeList->getUserRelation() !== $this->getUser()) {
+        $activeList = $this->santaListRepository->findOneBy(['id' => $listId]);
+        if(!$activeList || $activeList->getUserRelation() !== $this->getUser()) {
             return $this->redirectToRoute('home');
         }
-        $generation = $generateList->initialiseGeneration($activeList);
+        $generation = $this->generateList->initialiseGeneration($activeList);
 
         if($generation === true) {
             if($activeList->getSendNotificationForGeneratedList() == true) {
                 
-                $mailService->sendListGenerationConfirm($this->getUser(), $activeList);
+                $this->mailService->sendListGenerationConfirm($this->getUser(), $activeList);
             }
             if($activeList->getSendMailToSantas() == true) {
-                $mailService->sendSecretNameToSanta($this->getUser(), $activeList->getSantas(), $activeList);
+                $this->mailService->sendSecretNameToSanta($this->getUser(), $activeList->getSantas(), $activeList);
             }
             $this->addFlash('success', 'La liste a bien été générée');
             return $this->redirectToRoute('account');
@@ -51,10 +58,8 @@ class GenerateListController extends AbstractController
 
         }
         
-
         return $this->render('generate_list/index.html.twig', [
             'activeList' => $activeList
         ]);
     }
-    
 }
