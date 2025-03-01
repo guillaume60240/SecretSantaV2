@@ -85,7 +85,5 @@ Vous pourrez la trouver sur **Heroku** ici :
  [L'application Secret Santa](https://secret-santa-list-v2.herokuapp.com/)
 
 ## Me contacter
-N'hésitez pas à me contacter ou à me rejoindre sur mes réseaux professionnels, vous les trouverez sur mon portfolio :
-[Mon portfolio](https://guillaumelepoetre.fr)
+N'hésitez pas à me contacter ou à me rejoindre sur mes réseaux professionnels, vous les trouverez [ICI](https://formationsweb-glepoetre.fr)
 
-![Logo Guillaume Lepoetre, développeur web et web-mobile](/public/img/logo-test.png "Logo") 
